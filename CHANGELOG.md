@@ -13,6 +13,8 @@ All notable changes to this project are listed here. The format follows
   a fifth as often. With the call off, Start's ask for a summary, a **Load context** press and a
   model check reach the mod up to 0.8 s later than in 0.6.0, well within the line's
   [wait for a summary](docs/architecture/overview.md#the-wait).
+- **Show Debug Files** in the menu's **Feedback & Support** has no ellipsis any more, as in
+  Settings: it opens the folder and asks nothing more.
 
 ### Fixed
 
@@ -38,6 +40,8 @@ All notable changes to this project are listed here. The format follows
   no longer says **Context sent** for it, and an older app no longer gets the old conversation's.
 - A summary that went stale while its first model failed (a gap, or `/clear`) no longer asks the
   fallback model for one nobody will use.
+- Debug mode no longer overwrites a call's CSV with the next call's when both start in the same
+  second: the second file's name ends in `-2`.
 
 ## [0.6.0]
 

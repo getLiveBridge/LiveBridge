@@ -4374,6 +4374,37 @@ struct BridgeTests {
     try await settle(checking)
   }
 
+  /// A check that ended before its session polled is taken back: that poll is not handed it.
+  @Test func aCheckThatEndedIsNotHandedOver() async throws {
+    try await join(a, "Alpha", writesSummaries: true)
+    let asked = time.now
+    let checking = check(endsWith: .noAnswer)
+    #expect(await eventually { time.deadlines.contains(asked + 20) })
+    for _ in 0..<5 {  // a join, unlike a poll, keeps the session without taking its work
+      try await join(a, "Alpha", writesSummaries: true)
+      time.advance(by: .seconds(4))
+    }
+    try await settle(checking)
+    #expect(try await registry.poll(a) == nil)
+  }
+
+  /// The mod's own limit (`wire/summary-budget.json`) ends first, so its answer is not lost to ours.
+  @Test func theAppWaitsLongerThanTheModsCheck() async throws {
+    let file = WireTests.fixtures.appending(path: "../summary-budget.json")
+    let budget = try JSONDecoder().decode([String: Double].self, from: Data(contentsOf: file))
+    let modLimit = try #require(budget["modelCheckMs"]) / 1000
+    try await join(a, "Alpha", writesSummaries: true)
+    let asked = time.now
+    let armed = time.deadlines.count
+    let checking = check(endsWith: .noAnswer)
+    _ = try await checkHanded(to: a)
+    #expect(await eventually { time.deadlines.count > armed })
+    let deadline = try #require(time.deadlines.last)
+    #expect(deadline > asked + modLimit)
+    time.advance(by: .seconds(deadline.timeIntervalSince(asked)))
+    try await settle(checking)
+  }
+
   /// `/clear` before the session polls: the new id is handed the check, and its result counts.
   @Test func aCheckFollowsTheSessionsNewID() async throws {
     try await join(a, "Alpha", writesSummaries: true)

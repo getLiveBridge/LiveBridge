@@ -312,7 +312,7 @@ Press **Start**, in the band above the prompt or in the menu bar menu, and talk.
   sync while the call is stopped** and **Load a session's context on its first call**),
   **Settings…**, **Feedback & Support** (**Report a Bug…** opens the repository's bug report form,
   **LiveBridge Website** opens getlivebridge.com, **Star LiveBridge on GitHub** opens the
-  repository's page, then **Debug Mode** and **Show Debug Files…**, [debug mode](#settings)'s
+  repository's page, then **Debug Mode** and **Show Debug Files**, [debug mode](#settings)'s
   switch and folder, and **Uninstall LiveBridge…** ([Uninstall](#uninstall))) and **Quit LiveBridge**. Quick Settings is there even when the menu shows
   only the call. During a call **Conversation** shows your words and the voice's as codex transcribes them, so yours can appear a
   moment after you say them and the voice's a moment before you hear them. When each is finished,

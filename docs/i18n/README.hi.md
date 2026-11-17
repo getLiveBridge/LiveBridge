@@ -279,7 +279,7 @@ setting है, जो LiveBridge की [सेटिंग्स](#सेट�
   **Quick Settings** (**Connect over TCP**, **Play sounds for requests and answers**, **Notify when a result is waiting**, **Pause sync while the call is stopped** और **Load a session's context on its first call** के checkmark items),
   **Settings…**, **Feedback & Support** (**Report a Bug…** repository का bug report form खोलता है,
   **LiveBridge Website** getlivebridge.com खोलता है, **Star LiveBridge on GitHub** repository का page
-  खोलता है, फिर **Debug Mode** और **Show Debug Files…**, [debug mode](#सेटिंग्स) का switch और
+  खोलता है, फिर **Debug Mode** और **Show Debug Files**, [debug mode](#सेटिंग्स) का switch और
   folder, और **Uninstall LiveBridge…** ([अनइंस्टॉल करना](#अनइंस्टॉल-करना))) और **Quit LiveBridge** होते हैं। जब menu में सिर्फ़ call दिखती है, तब भी Quick Settings
   वहाँ होता है। call के दौरान **Conversation** आपके और voice के शब्द
   वैसे-वैसे दिखाता है जैसे-जैसे codex उन्हें transcribe करता है, इसलिए आपके शब्द बोलने के थोड़ी देर बाद, और

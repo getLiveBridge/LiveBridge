@@ -291,7 +291,7 @@ Pulsa **Start**, en la banda situada sobre el prompt o en el menú de la barra d
   **Connect over TCP**, **Play sounds for requests and answers**, **Notify when a result is waiting**, **Pause sync while the call is stopped** y **Load a session's context on its first call**),
   **Settings…**, **Feedback & Support** (**Report a Bug…** abre el formulario de informe de errores
   del repositorio, **LiveBridge Website** abre getlivebridge.com, **Star LiveBridge on GitHub** abre
-  la página del repositorio, y luego **Debug Mode** y **Show Debug Files…**, el interruptor y la
+  la página del repositorio, y luego **Debug Mode** y **Show Debug Files**, el interruptor y la
   carpeta del [modo de depuración](#ajustes), y **Uninstall LiveBridge…** ([Desinstalación](#desinstalación))) y **Quit LiveBridge**. Quick Settings está ahí incluso cuando el menú
   muestra solo la llamada. Durante una llamada, **Conversation** muestra tus palabras y
   las de la voz a medida que codex las transcribe, así que las tuyas pueden aparecer un momento después

@@ -291,7 +291,7 @@ Claude Code. Держать ли набранное в сессии вне го�
   **Connect over TCP**, **Play sounds for requests and answers**, **Notify when a result is waiting**, **Pause sync while the call is stopped** и **Load a session's context on its first call**),
   **Settings…**, **Feedback & Support** (**Report a Bug…** открывает форму отчёта об ошибке в
   репозитории, **LiveBridge Website** открывает getlivebridge.com, **Star LiveBridge on GitHub**
-  открывает страницу репозитория, затем **Debug Mode** и **Show Debug Files…**, переключатель и
+  открывает страницу репозитория, затем **Debug Mode** и **Show Debug Files**, переключатель и
   папка [режима отладки](#настройки), и **Uninstall LiveBridge…** ([Удаление](#удаление))) и **Quit LiveBridge**. Quick Settings есть и тогда, когда меню
   показывает только звонок. Во время звонка **Conversation** показывает ваши слова и слова голоса по мере
   того, как их расшифровывает codex, поэтому ваши могут появиться чуть позже, чем вы их сказали, а

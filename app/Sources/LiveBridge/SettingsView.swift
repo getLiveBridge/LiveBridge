@@ -86,7 +86,7 @@ struct SettingsView: View {
         .font(.caption).foregroundStyle(.secondary)
       }
       Section("Sounds") {
-        Toggle("Play sounds for requests and answers", isOn: setting(\.confirmHandoffs))
+        Toggle(MenuContent.Switch.confirmHandoffs.title, isOn: setting(\.confirmHandoffs))
         Text(
           "The voice sometimes says it is looking without sending the request. An answer has "
             + "its own sound; with no request sound, nothing was queued, so say it again."
@@ -102,13 +102,13 @@ struct SettingsView: View {
     Form {
       Section("Line") {
         seconds("Silence before the line closes", \.silenceSeconds)
-        if (1...9).contains(model.settings.current.silenceSeconds) {
+        if model.settings.current.timeouts.isShort(.silence) {
           warning(
             "Shorter than an ordinary pause: the line will close while you think, and each "
               + "reopening takes a few seconds.")
         }
         seconds("Wait for a first word on a line a result opened", \.firstWordSeconds)
-        if (1...3).contains(model.settings.current.firstWordSeconds) {
+        if model.settings.current.timeouts.isShort(.firstWord) {
           warning(
             "The voice often starts about 2 seconds after the line connects, so it can be cut off.")
         }
@@ -119,19 +119,20 @@ struct SettingsView: View {
         )
         .font(.caption).foregroundStyle(.secondary)
         seconds("Sound without words before the line closes", \.noiseSeconds)
-        if (1...9).contains(model.settings.current.noiseSeconds) {
+        if model.settings.current.timeouts.isShort(.noise) {
           warning(
             "Speech counts as sound without words until it is recognised, so the line can close "
               + "while you speak.")
         }
         Text(
-          "Seconds, from 0 to 300; 0 never closes the line for that. The line is billed by the "
-            + "minute while it is open, silence included. A timer turned on starts on a quiet "
-            + "line at once; one already counting keeps its time."
+          "Seconds, from \(CallMachine.Timeouts.range.lowerBound) to "
+            + "\(CallMachine.Timeouts.range.upperBound); 0 never closes the line for that. The "
+            + "line is billed by the minute while it is open, silence included. A timer turned on "
+            + "starts on a quiet line at once; one already counting keeps its time."
         )
         .font(.caption).foregroundStyle(.secondary)
         Toggle(
-          "Connect over TCP",
+          MenuContent.Switch.connectsOverTCP.title,
           isOn: Binding {
             model.settings.current.connectsOverTCP
           } set: {
@@ -153,7 +154,8 @@ struct SettingsView: View {
   private var contextTab: some View {
     Form {
       Section("Sync") {
-        Toggle("Pause sync while the call is stopped", isOn: setting(\.pauseSyncWhileStopped))
+        Toggle(
+          MenuContent.Switch.pauseSyncWhileStopped.title, isOn: setting(\.pauseSyncWhileStopped))
         Text(
           "What you type while the call is off stays out of the voice's conversation, and context "
             + "loads only from the menu, unless the next setting loads a summary, which carries "
@@ -161,7 +163,7 @@ struct SettingsView: View {
         )
         .font(.caption).foregroundStyle(.secondary)
         Toggle(
-          "Load a session's context on its first call", isOn: setting(\.loadContextOnFirstCall))
+          MenuContent.Switch.loadContextOnFirstCall.title, isOn: setting(\.loadContextOnFirstCall))
         Text(
           "Start or a line for a session with no summary yet asks for one, even while sync is paused. It "
             + "is written from the transcript, paused text included, and goes to OpenAI. A mod of "
@@ -179,8 +181,8 @@ struct SettingsView: View {
         }
         Text(
           "Writes the summary the voice gets as context, always at low effort, on your Claude "
-            + "usage. If another model fails, Haiku 5.5 writes it instead, unless that model ran out of "
-            + "time."
+            + "usage. If another model fails, \(SummaryModel.name(SummaryModel.default)) writes it "
+            + "instead, unless that model ran out of time."
         )
         .font(.caption).foregroundStyle(.secondary)
         if let line = model.update?.lastSummary?.line {
@@ -204,9 +206,7 @@ struct SettingsView: View {
   /// The tag of Custom… in the picker, which no model id can be.
   private static let custom = " custom"
 
-  private var isListed: Bool {
-    SummaryModel.listed.contains { $0.id == model.settings.current.summaryModel }
-  }
+  private var isListed: Bool { SummaryModel.isListed(model.settings.current.summaryModel) }
 
   /// The picker's choice: a listed model is stored at once, with no check; Custom… only shows the
   /// field, and the stored model stays in force.
@@ -259,7 +259,7 @@ struct SettingsView: View {
     Form {
       Section("Notifications") {
         Toggle(
-          "Notify when a result is waiting",
+          MenuContent.Switch.notifyResults.title,
           isOn: Binding {
             model.settings.current.notifyResults
           } set: {

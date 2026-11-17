@@ -291,7 +291,7 @@ claude plugin uninstall livebridge@livebridge
   **Connect over TCP**, **Play sounds for requests and answers**, **Notify when a result is waiting**, **Pause sync while the call is stopped** та **Load a session's context on its first call**),
   **Settings…**, **Feedback & Support** (**Report a Bug…** відкриває форму звіту про помилку в
   репозиторії, **LiveBridge Website** відкриває getlivebridge.com, **Star LiveBridge on GitHub**
-  відкриває сторінку репозиторію, далі **Debug Mode** і **Show Debug Files…**, перемикач і тека
+  відкриває сторінку репозиторію, далі **Debug Mode** і **Show Debug Files**, перемикач і тека
   [режиму налагодження](#налаштування), і **Uninstall LiveBridge…** ([Видалення](#видалення))) та **Quit LiveBridge**. Quick Settings є й тоді, коли меню
   показує лише дзвінок. Під час дзвінка **Conversation** показує ваші слова й слова голосу в міру того,
   як їх розшифровує codex, тож ваші можуть з'явитися трохи пізніше, ніж ви їх сказали, а слова голосу

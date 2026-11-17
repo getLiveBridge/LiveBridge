@@ -305,7 +305,7 @@ parlez.
   **Connect over TCP**, **Play sounds for requests and answers**, **Notify when a result is waiting**, **Pause sync while the call is stopped** et **Load a session's context on its first call**),
   **Settings…**, **Feedback & Support** (**Report a Bug…** ouvre le formulaire de rapport de bogue
   du dépôt, **LiveBridge Website** ouvre getlivebridge.com, **Star LiveBridge on GitHub** ouvre la
-  page du dépôt, puis **Debug Mode** et **Show Debug Files…**, l'interrupteur et le dossier du
+  page du dépôt, puis **Debug Mode** et **Show Debug Files**, l'interrupteur et le dossier du
   [mode débogage](#réglages), et **Uninstall LiveBridge…** ([Désinstallation](#désinstallation))) et **Quit LiveBridge**. Quick Settings est là même quand le menu ne montre que
   l'appel. Pendant un appel, **Conversation** affiche vos mots et ceux de la voix à mesure
   que codex les transcrit : les vôtres peuvent donc apparaître un instant après que vous les avez dits,

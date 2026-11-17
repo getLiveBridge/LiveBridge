@@ -7,7 +7,7 @@ import type { Engine, TestBody } from 'claude-code/testing'
 
 import { voicePrompt } from '../hooks/prompt.ts'
 import { transcriptText } from '../hooks/transcript.ts'
-import type { VoiceRequest } from '../hooks/wire.ts'
+import { MODEL_CHECK_TIMEOUT_MS, type VoiceRequest } from '../hooks/wire.ts'
 import { BAND, fakeWorld, framed, ID, liveOn } from './fake-bridge.ts'
 
 const DONE = { durationMs: 1, isAborted: false, reason: 'answer' } as const
@@ -29,10 +29,12 @@ async function joined(...[$, on]: Parameters<TestBody>) {
 /**
  * The app asks for the session's context, naming a model or, as an older app, none; the target's
  * next poll, at most a second on with the call off, brings the ask and is the one that runs it.
+ * Resolves to when that poll took it, which a test times the minute from.
  */
 async function appAsks(world: ReturnType<typeof fakeWorld>, ask: { model?: string; fallbackModel?: string; ask?: number } = {}) {
   world.work.push({ kind: 'context', ...ask })
   await world.clock.advance(1000)
+  return world.workTakenAt
 }
 
 /** A typed turn that ends with `answer`. */
@@ -220,11 +222,11 @@ test('aFailedModelFallsBackOnce', async ($, on) => {
 test('aTimeOutDoesNotFallBack', async ($, on) => {
   const world = await joined($, on)
   world.completeFails = { [OPUS]: 'held' }
-  await appAsks(world, NAMED)
+  const taken = await appAsks(world, NAMED)
   // The app holds its reply to the poll, so the clock crosses the minute with one held poll.
   let release = () => {}
   world.holdNext = new Promise<void>(resolve => { release = resolve })
-  await world.clock.advance(MINUTE)
+  await world.clock.set(taken + MINUTE)
   release()
   world.holdNext = null
   expect(world.take('context')).toEqual([{ ...SUMMARY, summary: '', failures: [{ reason: 'timed-out' }] }])
@@ -283,15 +285,27 @@ test('aSendAGapCrossedTriesNoFallback', async ($, on) => {
   ])
 })
 
+test('aTurnCompletedOnTheWayDoesNotCrossTheSend', async ($, on) => {
+  // A turn the app took only ends the kept summary's use; the send goes on to the fallback.
+  const world = await joined($, on)
+  world.completeMs = 5000
+  world.completeFails = { [OPUS]: 'api-error' }
+  await appAsks(world, { ...NAMED, ask: 1 })
+  await typedTurn($, 't1', 'Done.')
+  await world.clock.advance(10_000)
+  expect(world.completes.map(one => one.model)).toEqual([OPUS, HAIKU])
+  expect(world.take('context')).toEqual([expect.objectContaining({ summary: world.summary, ask: 1 })])
+})
+
 test('theDeadlinePostsTimedOut', async ($, on) => {
   // The first model fails late; the fallback gets only what is left of the minute, then the ask is answered.
   const world = await joined($, on)
   world.completeMs = 50_000
   world.completeFails = { [OPUS]: 'api-error', [HAIKU]: 'held' }
-  await appAsks(world, NAMED)
+  const taken = await appAsks(world, NAMED)
   let release = () => {}
   world.holdNext = new Promise<void>(resolve => { release = resolve })
-  await world.clock.advance(MINUTE - 1)
+  await world.clock.set(taken + MINUTE - 1)
   expect(world.take('context')).toEqual([])
   await world.clock.advance(1)
   release()
@@ -397,7 +411,7 @@ test('aCheckSendsOneShortRequest', async ($, on) => {
   const world = await joined($, on)
   await appChecks(world)
   expect(world.completes).toEqual([
-    { model: CHECK.model, prompt: 'Reply with OK.', effort: 'low', timeoutMs: 15_000, system: undefined, maxTokens: undefined },
+    { model: CHECK.model, prompt: 'Reply with OK.', effort: 'low', timeoutMs: MODEL_CHECK_TIMEOUT_MS, system: undefined, maxTokens: undefined },
   ])
   expect(world.forks).toBe(0)
 })
