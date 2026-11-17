@@ -15,7 +15,7 @@ export const BAND = {
   plugin: 'livebridge',
   component: 'AbovePrompt',
   props: {
-    hasSurvey: false, isWorking: false, maxRows: 10, bodyColumns: 100,
+    hasSurvey: false, isCollapsed: false, isWorking: false, maxRows: 10, bodyColumns: 100,
     scroll: { offset: 0, bodyRows: 10 }, view: {},
   },
 } as const
@@ -202,7 +202,8 @@ export function fakeWorld(on: On, store: Record<string, unknown> = {}, env: Reco
   on('http.fetch', async (_, e) => {
     if (!world.isAppUp || e.init?.socketPath !== world.socket) throw new Error('connect ENOENT')
     const route = new URL(e.url).pathname.replace('/v1/', '')
-    const body = e.init.body === undefined ? undefined : JSON.parse(e.init.body)
+    // The mod sends JSON text; only an engine request carries a `{ base64 }` body.
+    const body = typeof e.init.body === 'string' ? JSON.parse(e.init.body) : e.init.body
     world.calls.push({ route, body })
     if (route === 'join' && body.owner === true) world.removed.delete(body.sessionId)
     if (route === 'join') world.joined.add(body.sessionId)
