@@ -227,8 +227,8 @@ s'arrête avec une phrase qui indique où l'accorder.
 ### Désinstallation
 
 Dans la copie de `/Applications`, **Feedback & Support ▸ Uninstall LiveBridge…**, dans le menu,
-demande d'abord, puis met l'app dans la Corbeille ; s'il ne le peut pas, il le dit et ne change
-rien d'autre. Puis l'appel ouvert prend fin et chaque session quitte LiveBridge, comme avec
+demande d'abord, puis met l'app dans la Corbeille ; s'il ne le peut pas, il le dit, laisse
+l'app où elle est et remet l'ouverture à la connexion qu'il aurait retirée d'abord, et si macOS ne lui permet pas de la remettre, il le dit aussi, et comment réactiver **Open at login**. Puis l'appel ouvert prend fin et chaque session quitte LiveBridge, comme avec
 le × du menu, donc `/live` s'y éteint au lieu de rouvrir LiveBridge ; LiveBridge retire
 l'ouverture à la connexion et l'autorisation du micro et quitte, et une fois qu'il a quitté,
 les fichiers qu'il garde (ceux ci-dessous) vont dans un dossier de la Corbeille, jusqu'à ce que vous la vidiez. Il laisse le mod Claude Code et copie la commande qui
@@ -290,9 +290,9 @@ parlez.
 - **Le Start de la bande** fait de sa session la cible et démarre l'appel ; la ligne qu'il ouvre
   reçoit la conversation de la session, et charge en plus un résumé quand il manquerait à la voix
   une partie d'elle (voir **Load context** ci-dessous), mais avec **Pause sync** activé ou
-  après une pause seulement si elle n'en a pas encore ([détails](../../docs/architecture/overview.md#components)). Avec un mod de cette version, le
+  après une pause seulement si elle n'en a pas encore ([détails](../../docs/architecture/overview.md#when-the-app-asks)). Avec un mod de cette version, le
   résumé est demandé au Start et au changement de cible pendant l'appel, et la ligne l'attend avant
-  de se connecter, 10 secondes au plus depuis la demande : ce que vous dites entre-temps est gardé
+  de se connecter, au plus [la limite de l'attente](../../docs/architecture/overview.md#its-time) : ce que vous dites entre-temps est gardé
   sur le Mac et joué à la voix quand la ligne s'ouvre. Stop ou un changement de cible pendant
   l'attente jette ce qui était gardé, de même qu'une reconnexion après un changement de **Connect
   over TCP**, qui garde au plus les 2 dernières secondes pour la ligne rouverte. Tant que l'appel parle à
@@ -305,7 +305,7 @@ parlez.
   **Connect over TCP**, **Play sounds for requests and answers**, **Notify when a result is waiting**, **Pause sync while the call is stopped** et **Load a session's context on its first call**),
   **Settings…**, **Feedback & Support** (**Report a Bug…** ouvre le formulaire de rapport de bogue
   du dépôt, **LiveBridge Website** ouvre getlivebridge.com, **Star LiveBridge on GitHub** ouvre la
-  page du dépôt, puis **Debug Mode** et **Show Debug Files…**, l'interrupteur et le dossier du
+  page du dépôt, puis **Debug Mode** et **Show Debug Files**, l'interrupteur et le dossier du
   [mode débogage](#réglages), et **Uninstall LiveBridge…** ([Désinstallation](#désinstallation))) et **Quit LiveBridge**. Quick Settings est là même quand le menu ne montre que
   l'appel. Pendant un appel, **Conversation** affiche vos mots et ceux de la voix à mesure
   que codex les transcrit : les vôtres peuvent donc apparaître un instant après que vous les avez dits,
@@ -324,13 +324,13 @@ parlez.
   micro actif. Mute n'est pas un verrou : tout processus qui s'exécute sous votre compte peut le
   lever ([SECURITY.md](../../SECURITY.md#who-can-drive-the-bridge)).
 - **Load context** n'est activé que lorsqu'il manque à la voix une partie de la cible : pas de
-  résumé et **Pause sync** empêche la ligne suivante d'en charger un, un tour non arrivé, une question ou un avis de permission non parvenu à l'application, des
+  résumé et **Pause sync** empêche la ligne suivante d'en charger un ou le dernier demandé a échoué (jusqu'au prochain tour de la session ou au prochain Start), un tour non arrivé, une question ou un avis de permission non parvenu à l'application, des
   tours passés mod éteint, des lignes depuis le résumé qui ne tiennent plus toutes dans ce que la
   voix peut porter (une longue conversation le dépasse), la session a été mise en pause et a un résumé, ou son mod
   ne synchronise pas. Sinon l'élément affiche **Context up to date** et est désactivé, car la voix a
   déjà la conversation. Sans ligne ouverte, quand la ligne suivante va charger le résumé et que rien d'autre ne manque, il affiche **Context loads with the
   line** et est désactivé, car la prochaine ligne le demande d'elle-même. Tant qu'un résumé de la
-  cible est en route, quoi qui l'ait demandé, il affiche **Loading context…** et est désactivé, au plus les 60 secondes que le mod lui accorde (avec un mod plus ancien, il reste sur **Load context**) ; un
+  cible est en route, quoi qui l'ait demandé, il affiche **Loading context…** et est désactivé, au plus le temps que le mod lui accorde ([combien](../../docs/architecture/overview.md#its-time) ; avec un mod plus ancien, il reste sur **Load context**) ; un
   résumé qui arrive affiche **Context loaded** un instant, et une réponse vide revient à **Load
   context**. Un résumé ne porte pas de date : il peut être ignoré alors que l'élément
   reste activé ([BR-002](../../docs/bugs/BR-002.md)).
@@ -692,12 +692,6 @@ session.
   Settings indique. Avant ce réglage, le modèle de la session l'écrivait, ce qui marche partout où
   la session marche. Qu'un id fixé soit résolu chez ces fournisseurs vient de la documentation de
   Claude Code et n'a pas été essayé.
-- Un résumé qui échoue n'est pas retenu : tant que la session en a encore besoin, Start, un
-  changement de cible et chaque ligne qui s'ouvre en redemandent un, et le mod renvoie la même
-  transcription, jusqu'à 120 000 caractères, ce qui peut être facturé à chaque fois même si la
-  réponse revient vide ou trop tard. Si **Context failed** reste sur la bande de la session,
-  activez **Pause sync** et laissez
-  **Load a session's context on its first call** désactivé.
 - Une session encore sur un mod antérieur à cette version, jusqu'à son redémarrage, n'est pas
   synchronisée : elle charge un résumé comme une session à laquelle il manque des tours, et aucune
   pause ne refuse ses lignes ([ce qui change d'autre](../../CHANGELOG.md)).

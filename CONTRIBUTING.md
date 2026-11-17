@@ -14,7 +14,7 @@ says, not in an issue. Everyone taking part follows the [Code of Conduct](CODE_O
 | `app/` | The SwiftPM package: `BridgeCore` (pure logic, tested without codex, a microphone or Claude) and `LiveBridge` (the menu bar app and its invisible audio page). |
 | `plugin/` | The Claude Code mod `livebridge`. `hooks/register.tsx` is wiring only; the other `hooks/*.ts` modules are pure. |
 | `wire/fixtures/` | One JSON file per message between the mod and the app: the shared oracle both sides test against. |
-| `wire/summary-budget.json` | The time the mod allows a summary, which both sides test their constant against. |
+| `wire/summary-budget.json` | The time the mod allows a summary, which both sides test their constant against, and the time it allows Settings' model check, which the app's wait must outlast. |
 | `scripts/` | `check.sh` (every check CI runs but the floor run), `check-mod.sh` (the mod's engine-facing half), `check-floor.sh` (that half on the lowest Claude Code the README promises), `build-app.sh` (build, install, uninstall, package), `smoke.sh` (end to end). |
 | `docs/` | [Architecture](docs/architecture/overview.md) and [ADRs](docs/adr/); the rest is the stayfixed scaffold (below). |
 
@@ -53,8 +53,10 @@ redactor), with their tests in `app/Tests/BridgeCoreTests`.
 
 The Claude Code adapter is the mod in `plugin/`: `hooks/register.tsx` wires it to Claude Code's
 mod API (the `/live` command, `prompt.submit`, the band), `hooks/link.ts` talks to the app and
-runs the poll (once a second, five times a second for the target), `hooks/prompt.ts` and
-`hooks/turns.ts` decide which turns answer a voice request and what each posts back, and
+runs the poll (at [the rate the overview gives](docs/architecture/overview.md#components)), `hooks/prompt.ts` and
+`hooks/turns.ts` decide which turns answer a voice request and what each posts back,
+`hooks/summaries.ts` runs the summary sends (the summary it keeps, the send in flight, the asks that
+join it and what crosses it; [the summary](docs/architecture/overview.md#a-numbered-ask)), and
 `hooks/title.ts` reads the session's title from Claude Code's session registry. An adapter for another agent speaks the same wire: it joins, polls
 `GET /v1/next` and posts its answers, activity and context, on the routes listed under
 [the wire](docs/architecture/overview.md#the-wire).

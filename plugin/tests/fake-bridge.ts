@@ -15,7 +15,7 @@ export const BAND = {
   plugin: 'livebridge',
   component: 'AbovePrompt',
   props: {
-    hasSurvey: false, isWorking: false, maxRows: 10, bodyColumns: 100,
+    hasSurvey: false, isCollapsed: false, isWorking: false, maxRows: 10, bodyColumns: 100,
     scroll: { offset: 0, bodyRows: 10 }, view: {},
   },
 } as const
@@ -110,9 +110,10 @@ export function fakeWorld(on: On, store: Record<string, unknown> = {}, env: Reco
     completes: [] as { model: string; system?: string; prompt: string; effort?: string; maxTokens?: number; timeoutMs?: number }[],
     /**
      * How a model fails, by id: the engine refuses it (`complete` rejects), an API error, a reply
-     * with no text, or held until its `timeoutMs` runs out. Any other model writes `summary`.
+     * with no text, held until its `timeoutMs` runs out, or `summary` with no `usage`, which the
+     * engine's type promises. Any other model writes `summary`.
      */
-    completeFails: {} as Record<string, 'refused' | 'api-error' | 'empty-reply' | 'held'>,
+    completeFails: {} as Record<string, 'refused' | 'api-error' | 'empty-reply' | 'held' | 'no-usage'>,
     /** How long a model takes over a summary, on the mocked clock. */
     completeMs: 0,
     joined: new Set<string>(),
@@ -120,6 +121,8 @@ export function fakeWorld(on: On, store: Record<string, unknown> = {}, env: Reco
     removed: new Set<string>(),
     status: { call: 'off', sessions: [], minutesToday: 0, unheard: 0, isMuted: false } as StatusReply,
     work: [] as Work[],
+    /** When a poll last took a piece of `work`, on the mocked clock. */
+    workTakenAt: 0,
     calls: [] as Call[],
     submitted: [] as string[],
     launches: [] as (readonly string[])[],
@@ -201,7 +204,8 @@ export function fakeWorld(on: On, store: Record<string, unknown> = {}, env: Reco
   on('http.fetch', async (_, e) => {
     if (!world.isAppUp || e.init?.socketPath !== world.socket) throw new Error('connect ENOENT')
     const route = new URL(e.url).pathname.replace('/v1/', '')
-    const body = e.init.body === undefined ? undefined : JSON.parse(e.init.body)
+    // The mod sends JSON text; only an engine request carries a `{ base64 }` body.
+    const body = typeof e.init.body === 'string' ? JSON.parse(e.init.body) : e.init.body
     world.calls.push({ route, body })
     if (route === 'join' && body.owner === true) world.removed.delete(body.sessionId)
     if (route === 'join') world.joined.add(body.sessionId)
@@ -244,7 +248,7 @@ export function fakeWorld(on: On, store: Record<string, unknown> = {}, env: Reco
     const reply = route !== 'next'
       ? {}
       : world.joined.has(new URL(e.url).searchParams.get('sessionId') ?? '')
-        ? { status: world.status, ...(world.work.length > 0 && { work: world.work.shift() }) }
+        ? { status: world.status, ...(world.work.length > 0 && { work: takeWork() }) }
         : undefined
     const text = JSON.stringify(reply ?? { error: 'unknown session' })
     if (route === 'next' && world.nextMs > 0) await world.clock.sleep(world.nextMs)
@@ -255,6 +259,10 @@ export function fakeWorld(on: On, store: Record<string, unknown> = {}, env: Reco
     }
     return { value: { status: reply ? 200 : 404, ok: reply !== undefined, headers: {}, text } }
   })
+  const takeWork = () => {
+    world.workTakenAt = world.clock.now()
+    return world.work.shift()
+  }
   on('prompt.submit', (_, e) => {
     if (world.isSubmitRefused) throw new Error('the session is closing')
     if (world.isPromptDropped) return { drop: 'a hook refused the prompt' }
@@ -301,6 +309,7 @@ export function fakeWorld(on: On, store: Record<string, unknown> = {}, env: Reco
     if (fails === 'api-error') {
       return { value: { isAnswered: false, reason: 'api-error', status: 529, error: 'overloaded', usage: none } } as const
     }
+    if (fails === 'no-usage') return { value: { isAnswered: true, text: world.summary } } as never
     if (fails === 'empty-reply') return { value: { isAnswered: false, reason: 'empty-reply', usage: { ...none, input_tokens: 13105 } } } as const
     return { value: { isAnswered: true, text: world.summary, usage: { ...none, input_tokens: 13105, output_tokens: 412 } } } as const
   })

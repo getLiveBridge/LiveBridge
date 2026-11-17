@@ -235,8 +235,10 @@ call stops with a sentence that says where to allow it.
 ### Uninstall
 
 In the copy in `/Applications`, the menu's **Feedback & Support ▸ Uninstall LiveBridge…** asks
-first, then moves the app to the Trash; if it cannot, it says so and changes nothing else. Then
-a call open ends and every session leaves LiveBridge, as the menu's × does, so `/live`
+first, then moves the app to the Trash; if it cannot, it says so, leaves the app where it is and
+puts back any login item it removed first, and if macOS does not let it put that login item back,
+it says that too, and how to turn **Open at login** on again. Then a call open ends and every session leaves LiveBridge, as the
+menu's × does, so `/live`
 turns off in each instead of opening LiveBridge again; LiveBridge removes its login item and
 microphone permission and quits, and once it has quit, the files it keeps (listed below) go to a
 folder in the Trash, until you empty it. It leaves the Claude Code mod, and
@@ -294,9 +296,9 @@ Press **Start**, in the band above the prompt or in the menu bar menu, and talk.
 - **The band's Start** makes its session the target and starts the call; the line it opens is seeded
   with the session's conversation, and loads a summary of the session as well when the voice would
   lack part of it (see **Load context** below), but while **Pause sync** is on or after a
-  pause only when it has none yet ([details](docs/architecture/overview.md#components)). With a mod of this
+  pause only when it has none yet ([details](docs/architecture/overview.md#when-the-app-asks)). With a mod of this
   release the summary is asked for at Start and when the target changes during the call, and the
-  line waits for it before it connects, at most 10 seconds from the ask: what you say meanwhile is
+  line waits for it before it connects, for at most [the wait's limit](docs/architecture/overview.md#its-time): what you say meanwhile is
   held on the Mac and played to the voice once the line opens. Stop or a target change during the
   wait drops what was held, and so does a reconnect after **Connect over TCP** changes, which keeps
   at most the last 2 seconds for the line that opens again. While the call talks to another
@@ -310,7 +312,7 @@ Press **Start**, in the band above the prompt or in the menu bar menu, and talk.
   sync while the call is stopped** and **Load a session's context on its first call**),
   **Settings…**, **Feedback & Support** (**Report a Bug…** opens the repository's bug report form,
   **LiveBridge Website** opens getlivebridge.com, **Star LiveBridge on GitHub** opens the
-  repository's page, then **Debug Mode** and **Show Debug Files…**, [debug mode](#settings)'s
+  repository's page, then **Debug Mode** and **Show Debug Files**, [debug mode](#settings)'s
   switch and folder, and **Uninstall LiveBridge…** ([Uninstall](#uninstall))) and **Quit LiveBridge**. Quick Settings is there even when the menu shows
   only the call. During a call **Conversation** shows your words and the voice's as codex transcribes them, so yours can appear a
   moment after you say them and the voice's a moment before you hear them. When each is finished,
@@ -327,13 +329,14 @@ Press **Start**, in the band above the prompt or in the menu bar menu, and talk.
   not a lock: any process running as you can unmute
   ([SECURITY.md](SECURITY.md#who-can-drive-the-bridge)).
 - **Load context** is enabled only when the voice lacks part of the target: it has no summary
-  and **Pause sync** stops the next line loading one, a turn did not arrive, a question or permission notice did not reach the app, turns ran while the
+  and **Pause sync** stops the next line loading one or the last one asked for failed
+  (until the session's next turn or the next Start), a turn did not arrive, a question or permission notice did not reach the app, turns ran while the
   mod was off, the lines since the summary no longer all fit what the voice can carry (a long
   conversation outgrows that), the session was paused and has a summary, or its mod does not sync. Otherwise the item
   reads **Context up to date** and is disabled, because the voice already has the conversation. With
   no line open, when the next line will load the summary and nothing else is missing, it reads **Context loads with the line** and is disabled, because
   the next line asks for one by itself. While a summary of the target is on its way, whatever asked
-  for it, the item reads **Loading context…** and is disabled, for at most the 60 seconds the mod allows it (on an older mod it stays **Load context**); one that arrives shows **Context
+  for it, the item reads **Loading context…** and is disabled, for at most the time the mod allows it ([how long](docs/architecture/overview.md#its-time); on an older mod it stays **Load context**); one that arrives shows **Context
   loaded** for a moment, and an empty answer goes back to **Load context**. A summary carries no date, so one can be ignored while the item stays enabled
   ([BR-002](docs/bugs/BR-002.md)).
 - **New conversation…** erases the target's conversation and its loaded context, and a session's ×
@@ -656,11 +659,6 @@ can become a request that Claude runs under the session's own permission mode.
   says. Before this setting the session's own model wrote it, which works wherever the session
   does. That a pinned id resolves on those providers comes from Claude Code's documentation and
   was not run.
-- A summary that fails is not remembered: while the session still needs one, Start, a change of
-  target and every line that opens ask again, and the mod sends the same transcript again, up to
-  120,000 characters, which a reply that came back empty or too late may bill each time. If
-  **Context failed** stays on the session's band, turn on **Pause sync** and leave **Load a
-  session's context on its first call** off.
 - A session still on a mod from before this release, until it restarts, is not synced: it loads a
   summary as a session with missing turns does, and no pause refuses its lines ([what else
   differs](CHANGELOG.md)).

@@ -30,7 +30,7 @@ public actor Bridge: Router {
   /// Settings' summary model, read at each ask.
   private let summaryModel: @Sendable () -> String
   /// What came of the last summary asked for with a model.
-  public private(set) var lastSummary: SummaryReport?
+  private var lastSummary: SummaryReport?
   /// Settings' model check in flight: its id, the session it went to, who waits on it, and the task
   /// that hands it over and ends it after `checkSeconds`.
   private var modelCheck:
@@ -38,6 +38,7 @@ public actor Bridge: Router {
       id: String, session: SessionID, done: CheckedContinuation<ModelCheckResult, Never>,
       timer: Task<Void, Never>
     )?
+  /// Outlasts the mod's own limit on the check (`wire/summary-budget.json`).
   private static let checkSeconds = 20
   private var machine = CallMachine()
   /// The running codex controller; its events count only while it is this one.
@@ -96,9 +97,9 @@ public actor Bridge: Router {
     pausesSync: @escaping @Sendable () -> Bool = { false },
     timeouts: @escaping @Sendable () -> CallMachine.Timeouts,
     loadsContextOnFirstCall: @escaping @Sendable () -> Bool,
-    connectsOverTCP: @escaping @Sendable () -> Bool = { false },
-    summaryModel: @escaping @Sendable () -> String = { SummaryModel.default },
-    reportsSummary: @escaping @Sendable (SummaryTiming) -> Void = { _ in }, appVersion: AppVersion?
+    connectsOverTCP: @escaping @Sendable () -> Bool,
+    summaryModel: @escaping @Sendable () -> String,
+    reportsSummary: @escaping @Sendable (SummaryTiming) -> Void, appVersion: AppVersion?
   ) {
     self.reportsSummary = reportsSummary
     self.summaryModel = summaryModel
@@ -211,10 +212,11 @@ public actor Bridge: Router {
   public var hasOpenRequests: Bool { get async { await registry.hasOpenRequests } }
 
   /// Asks the target session for its context summary; it arrives as `POST /v1/context`. The
-  /// menu shows the ask in flight at once.
+  /// menu shows the ask in flight at once. A press asks even a session held off after a summary
+  /// that failed (`SummaryAsks.asksByItself`).
   public func loadContext() async {
     guard let target = await registry.target else { return }
-    await askForContext(of: target)
+    await askForContext(of: target, pressed: true)
     await changed()
   }
 
@@ -226,14 +228,16 @@ public actor Bridge: Router {
     guard await registry.writesSummaries(id), !pauseHoldsBackSummary(of: id),
       await needsContext(id)
     else { return }
-    await askForContext(of: id)
+    await askForContext(of: id, pressed: false)
   }
 
   /// A mod that writes summaries is told the model and, unless it is the default, the default to
   /// fall back on; one that forks is asked as before. An ask that joins the open one goes to the
   /// mod again with its number: the mod joins it to the send on its way, and a mod that has none
   /// (it restarted, or the app lost its post) writes it, so a lost answer is asked for again.
-  private func askForContext(of id: SessionID) async {
+  /// Only a press asks a session held off after a summary that failed.
+  private func askForContext(of id: SessionID, pressed: Bool) async {
+    guard pressed || summaries.asksByItself(id) else { return }
     var model: String?
     var fallback: String?
     if await registry.writesSummaries(id) {
@@ -250,15 +254,14 @@ public actor Bridge: Router {
   /// Settings' check of a custom summary model, run by a joined session's mod: the target if its
   /// mod writes summaries, else the most recently joined one whose mod does. The result is taken
   /// only from that session, under the check's id; 20 s without one, or the session's drop, is
-  /// `noAnswer`. A newer check ends the one before it. It takes the poller's word: a process
-  /// that polls as that session before its mod does can say any model works (SECURITY.md).
+  /// `noAnswer`. It takes the poller's word: a process that polls as that session before its mod
+  /// does can say any model works (SECURITY.md). One check runs at a time: Settings disables its
+  /// button while one does, and a check started during another would leave the first unanswered.
   public func checkModel(_ model: String) async -> ModelCheckResult {
     guard let session = await registry.sessionThatChecks() else { return .noSession }
     let id = UUID().uuidString
     return await withCheckedContinuation { done in
-      let older = endCheck(.noAnswer)
       let timer = Task { [registry, time] in
-        if let older { await registry.withdrawCheck(older) }
         // the check may have ended since, and its session may have a new id after /clear
         guard let check = self.modelCheck, check.id == id else { return }
         await registry.requestCheck(for: check.session, check: id, model: model)
@@ -272,17 +275,11 @@ public actor Bridge: Router {
   /// Ends the check in flight with `result`, if it is check `id` or no id is given, and takes it
   /// back from a session that has not polled it yet.
   private func finishCheck(_ result: ModelCheckResult, of id: String? = nil) async {
-    guard let ended = endCheck(result, of: id) else { return }
-    await registry.withdrawCheck(ended)
-  }
-
-  /// Ends the check as `finishCheck` does but leaves it with its session; returns the ended id.
-  private func endCheck(_ result: ModelCheckResult, of id: String? = nil) -> String? {
-    guard let check = modelCheck, id == nil || id == check.id else { return nil }
+    guard let check = modelCheck, id == nil || id == check.id else { return }
     modelCheck = nil
     check.timer.cancel()
     check.done.resume(returning: result)
-    return check.id
+    await registry.withdrawCheck(check.id)
   }
 
   /// `POST /v1/model-check`: the result of the check in flight, from the session it went to.
@@ -368,7 +365,9 @@ public actor Bridge: Router {
         try await registry.join(body)
         if let old = body.replaces, replaced {  // after /clear: the same session, a new id
           continuity.move(old, to: body.sessionId)
+          summaries.rename(old, to: body.sessionId)
           machine.rename(old, to: body.sessionId)
+          if callTarget == old { callTarget = body.sessionId }  // no target change
           if modelCheck?.session == old { modelCheck?.session = body.sessionId }
           if lineSession == old {
             lineSession = body.sessionId
@@ -378,6 +377,7 @@ public actor Bridge: Router {
         }
         if body.missed == true {
           continuity.markMissed(body.sessionId, asPaused: pausesSync())
+          summaries.turnArrived(in: body.sessionId)  // a turn ran, so the transcript changed
           save()
         }
         if problem == .noSession { problem = nil }
@@ -387,7 +387,11 @@ public actor Bridge: Router {
       case ("POST", "/v1/answer"):
         let body = try req.decodeBody(AnswerBody.self)
         switch try await registry.complete(body) {
-        case .delivery(let delivery): await deliver(delivery)
+        case .delivery(let delivery):
+          // A voice turn ran to its answer, so the transcript changed (`.superseded` too, through
+          // `addSynced`); a question, an update or a failure may not have ended a turn.
+          if delivery.status == .ok { summaries.turnArrived(in: body.sessionId) }
+          await deliver(delivery)
         case .superseded: await keepSuperseded(body)
         case .dropped: break
         }
@@ -519,15 +523,16 @@ public actor Bridge: Router {
   }
 
   /// What the menu says of it: a session whose next line asks for the one thing missing is
-  /// offered no press, unless a line is already open, whose ask may have brought nothing. A paused
-  /// mark is no gap: all it costs the voice is the summary that line then brings.
+  /// offered no press, unless a line is already open, whose ask may have brought nothing, or the
+  /// session is held off after a summary that failed, so its line asks nothing. A paused mark is no
+  /// gap: all it costs the voice is the summary that line then brings.
   private func contextNeed(_ id: SessionID) async -> ContextNeed {
     guard await needsContext(id) else { return .none }
     let conversation = continuity[id]
     let hasGap = conversation.outOfSync == .missed || conversation.isOverSeed
     let syncs = await registry.syncs(id)
-    return !hasGap && syncs && !pauseHoldsBackSummary(of: id) && !lineIsOpen(for: id)
-      ? .withTheLine : .load
+    let lineAsks = !pauseHoldsBackSummary(of: id) && summaries.asksByItself(id)
+    return !hasGap && syncs && lineAsks && !lineIsOpen(for: id) ? .withTheLine : .load
   }
 
   /// Starts the attempt that opens the line, in the same turn as the machine's decision to open.
@@ -557,7 +562,7 @@ public actor Bridge: Router {
     lineSession = session
     lineKnowsSession = true
     if let session, !pauseHoldsBackSummary(of: session), await needsContext(session) {
-      await askForContext(of: session)
+      await askForContext(of: session, pressed: false)
     }
     do {
       let voice = try await controller()
@@ -894,7 +899,8 @@ public actor Bridge: Router {
     let wrote = !body.summary.allSatisfy(\.isWhitespace)
     let failures = body.failures ?? []
     // The waiting line looks again at the `changed()` after every post, this one ignored or not.
-    let answer = summaries.answer(id, number: body.ask, wrote: wrote, in: &continuity, at: now)
+    let answer = summaries.answer(
+      id, number: body.ask, wrote: wrote, failed: !failures.isEmpty, in: &continuity, at: now)
     switch answer {
     case .taken(let ask, let waited), .stale(let ask, let waited):
       save()  // the ask is closed, also for the app after a restart
@@ -914,17 +920,20 @@ public actor Bridge: Router {
           askedFor: nil, stale: true, hadSummary: wrote, model: nil, stats: body.stats))
     case .closedAsk, .unasked: break
     }
-    guard answer.isTaken else { return }
     let line =
-      wrote
+      answer.isTaken && wrote
       ? AnswerShaper.line(
         .context, label: row.label, body: body.summary, limit: Self.maxContext, session: id)
       : nil
-    guard let line else { return }
-    let isNew = line.text != continuity[id].context
-    continuity.setContext(line.text, for: id)
-    save()
-    guard isNew, lineSession == id else { return }
+    let isNew = line.map { $0.text != continuity[id].context } ?? false
+    if let line {
+      continuity.setContext(line.text, for: id)
+      save()
+    }
+    // The closed ask is taken back from a mod that has not polled it, after the summary is stored:
+    // a line woken meanwhile is seeded with it.
+    if let closed = answer.closed { await registry.withdrawContext(of: id, ask: closed.number) }
+    guard let line, isNew, lineSession == id else { return }
     switch machine.phase {
     case .live: try? await realtime?.addContext(line.text)
     case .connecting: heldContext = line
@@ -958,8 +967,9 @@ public actor Bridge: Router {
   }
 
   /// Keeps a line of a turn in its session's conversation, as the owner's if it is typed; the open
-  /// line about that session is given it at once, as context. False, and nothing saved, when it
-  /// has nothing to say.
+  /// line about that session is given it at once, as context. The session's transcript changed, so
+  /// a summary that failed is asked for by itself again. False, and nothing saved, when it has
+  /// nothing to say.
   @discardableResult
   private func addSynced(_ text: String, kind: SyncKind, of row: SessionRow) async -> Bool {
     let id = row.sessionId
@@ -967,6 +977,7 @@ public actor Bridge: Router {
       return false
     }
     record(line.kind == .typed ? .owner : .claude, line.text, in: id)
+    summaries.turnArrived(in: id)
     if lineKnowsSession, lineSession == id { await send(.synced(line)) }
     return true
   }

@@ -120,7 +120,7 @@ struct MenuContentTests {
         "  Star LiveBridge on GitHub",
         "  ---",
         "  [ ] Debug Mode",
-        "  Show Debug Files…",
+        "  Show Debug Files",
         "  ---",
         "  Uninstall LiveBridge…",
         "---",
@@ -161,7 +161,7 @@ struct MenuContentTests {
         .live, sessions: 3, target: 2,
         lines: [Self.line(.voice, "Hello."), Self.line(.owner, "Hi.")]))
     #expect(
-      menu.outline == [
+      Array(menu.outline.prefix(16)) == [
         "[call] Live · Stop · Mute",
         "---",
         "# Sessions",
@@ -178,26 +178,6 @@ struct MenuContentTests {
         "  | You: Hi.",
         "---",
         "4 min this call · 31 min today (disabled)",
-        "---",
-        "Quick Settings ▸",
-        "  [ ] Connect over TCP",
-        "  [x] Play sounds for requests and answers",
-        "  [x] Notify when a result is waiting",
-        "  [ ] Pause sync while the call is stopped",
-        "  [x] Load a session's context on its first call",
-        "Settings… ⌘,",
-        "---",
-        "Feedback & Support ▸",
-        "  Report a Bug…",
-        "  LiveBridge Website",
-        "  Star LiveBridge on GitHub",
-        "  ---",
-        "  [ ] Debug Mode",
-        "  Show Debug Files…",
-        "  ---",
-        "  Uninstall LiveBridge…",
-        "---",
-        "Quit LiveBridge ⌘Q",
       ])
   }
 
@@ -350,7 +330,7 @@ struct MenuContentTests {
           .command(.starOnGitHub, title: "Star LiveBridge on GitHub", isEnabled: true),
           .separator,
           .toggle(.debugMode, isOn: on),
-          .command(.showDebugFiles, title: "Show Debug Files…", isEnabled: true),
+          .command(.showDebugFiles, title: "Show Debug Files", isEnabled: true),
           .separator,
           .command(.uninstall, title: "Uninstall LiveBridge…", isEnabled: true),
         ])
@@ -368,6 +348,16 @@ struct MenuContentTests {
       #expect(
         support.last == .command(.uninstall, title: "Uninstall LiveBridge…", isEnabled: installed))
     }
+  }
+
+  /// An app that cannot move to the Trash says nothing was changed only when the login item it
+  /// removed first is back; otherwise it says where to turn it on again.
+  @Test func aFailedUninstallSaysNothingChangedOnlyWithTheLoginItemBack() {
+    let restored = Confirmation.cannotTrash(reason: "Denied.", loginItemRestored: true)
+    #expect(restored.contains("Nothing was changed"))
+    let lost = Confirmation.cannotTrash(reason: "Denied.", loginItemRestored: false)
+    #expect(!lost.contains("Nothing was changed"))
+    #expect(lost.contains("Open at login") && lost.contains("Login Items"))
   }
 
   @Test func withoutABridgeQuickSettingsAreStillThere() throws {

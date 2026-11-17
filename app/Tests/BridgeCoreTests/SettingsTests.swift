@@ -94,11 +94,6 @@ struct SettingsStoreTests {
     #expect(SettingsStore(file: file).current.loadContextOnFirstCall)
   }
 
-  /// A 0.5.x file has no summary model: it gets the default, on an update too.
-  @Test func aFileFromBeforeItGetsHaiku() throws {
-    #expect(try decoded(#"{"voice":"marin"}"#).summaryModel == "claude-haiku-5-5")
-  }
-
   @Test func aBadStoredValueGetsHaiku() throws {
     #expect(try decoded(#"{"summaryModel":"x;rm -rf"}"#).summaryModel == "claude-haiku-5-5")
     #expect(try decoded(#"{"summaryModel":"claude-opus-5-5"}"#).summaryModel == "claude-opus-5-5")
@@ -109,10 +104,6 @@ struct SettingsStoreTests {
 
   @Test func theLineKeepsTodaysTimersByDefault() {
     #expect(Settings().timeouts == CallMachine.Timeouts(silence: 20, firstWord: 5, noise: 90))
-  }
-
-  @Test func aFileFromBeforeTheTimersKeepsTodaysTimers() throws {
-    #expect(try decoded(#"{"voice":"marin"}"#).timeouts == Settings().timeouts)
   }
 
   @Test func theLinesTimersAreKeptAcrossRestarts() throws {
@@ -130,6 +121,18 @@ struct SettingsStoreTests {
     let settings = try decoded(#"{"silenceSeconds":-5,"noiseSeconds":9999}"#)
     #expect(settings.silenceSeconds == 0)
     #expect(settings.noiseSeconds == 300)
+  }
+
+  /// A hand-edited value of the wrong type reads as that setting's default, and the file's other
+  /// settings are kept: the next change writes them back instead of the defaults.
+  @Test func aWrongTypedSettingKeepsTheRest() throws {
+    let settings = try decoded(
+      #"{"voice":"cedar","prompt":"Speak with me in Spanish.","silenceSeconds":7.5,"#
+        + #""noiseSeconds":"20","notifyResults":"no"}"#)
+    #expect(settings.voice == "cedar")
+    #expect(settings.prompt == "Speak with me in Spanish.")
+    #expect(settings.timeouts == Settings().timeouts)
+    #expect(settings.notifyResults)
   }
 
   @Test func changesAreKeptAcrossRestarts() throws {

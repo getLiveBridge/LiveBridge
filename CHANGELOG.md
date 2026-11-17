@@ -4,6 +4,45 @@ All notable changes to this project are listed here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow
 [Semantic Versioning](https://semver.org/).
 
+## [0.6.1]
+
+### Changed
+
+- The target session polls the app five times a second only while the call is on; with the call
+  off it polls once a second, as the others do, so a session with no call wakes the app and itself
+  a fifth as often. With the call off, Start's ask for a summary, a **Load context** press and a
+  model check reach the mod up to 0.8 s later than in 0.6.0, well within the line's
+  [wait for a summary](docs/architecture/overview.md#the-wait).
+- **Show Debug Files** in the menu's **Feedback & Support** has no ellipsis any more, as in
+  Settings: it opens the folder and asks nothing more.
+
+### Fixed
+
+- A setting of the wrong type in `settings.json`, such as a hand-edited `"silenceSeconds": 7.5`
+  or `"20"`, no longer resets every setting: that one takes its default, and the voice, the
+  prompt and the rest are kept.
+- **Uninstall LiveBridge…** no longer says "Nothing was changed" when it cannot move the app to the
+  Trash and macOS does not let it put back the login item it removed first: it says the login item
+  could not be restored, and that **Open at login** in Settings or System Settings ▸ General ▸
+  Login Items turns it on again.
+- A summary that fails is no longer asked for again by itself. After an ask the mod answers with
+  no summary and a failure, neither a change of target during the call nor a line that opens asks
+  that session again until a turn of it arrives, typed or by voice, or the next Start, so a long
+  call no longer sends the same transcript, up to 120,000 characters, to the summary model at
+  every line. **Load context** still asks, and the menu offers it then. An ask already answered is no longer handed to the mod
+  again. `/clear` during a call no longer asks the session ahead as if the target had changed, nor
+  lets a line wait for the summary again when the call had spent that wait, and **Context loaded**
+  survives it.
+- A session whose transcript the mod cannot turn into text now reports the summary as failed with
+  **transcript-unreadable**, before any model is asked, and logs the error in the session, instead
+  of failing with no reason.
+- A summary still being written when you run `/clear` is stale, as one a gap crossed is: the band
+  no longer says **Context sent** for it, and an older app no longer gets the old conversation's.
+- A summary that went stale while its first model failed (a gap, or `/clear`) no longer asks the
+  fallback model for one nobody will use.
+- Debug mode no longer overwrites a call's CSV with the next call's when both start in the same
+  second: the second file's name ends in `-2`.
+
 ## [0.6.0]
 
 ### Added
