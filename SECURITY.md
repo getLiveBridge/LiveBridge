@@ -220,7 +220,7 @@ those shapes goes to OpenAI as typed, personal text included.
 - **Anything that steers the voice can start work.** Text a joined session read (a README, an
   issue, a web page, a tool's output) can reach the voice in a result, a question, an update, an
   approval notice, a summary, a synced line or Claude's answer to a turn you typed, and talk it into a
-  handoff, including the "confirmed by voice" sentence above. A page Claude reads while you type
+  handoff while the call is not muted (a muted call's handoffs reach no session), including the "confirmed by voice" sentence above. A page Claude reads while you type
   to it can steer the voice through Claude's answer, as it could in a voice turn.
 - **A handoff can hop between sessions.** The voice hands work to the target session, or to the
   session that asked the last question. So text that session A read can become a prompt in

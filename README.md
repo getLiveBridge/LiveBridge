@@ -320,7 +320,9 @@ Press **Start**, in the band above the prompt or in the menu bar menu, and talk.
   closes are gone.
 - **Mute** (beside **Stop**, in the band and in the menu's call card; **Unmute** while muted)
   releases your microphone while the call goes on: an answer from Claude still opens the line and
-  goes to the voice to say. The band keeps the phase and adds `· muted`; the menu says "Muted — line
+  goes to the voice to say. While muted the voice hands nothing to a session: you cannot have
+  asked for it, so a handoff then is the voice acting on the lines it was given, and the app tells it
+  nothing was handed off. Say it again after **Unmute**. The band keeps the phase and adds `· muted`; the menu says "Muted — line
   closed" while no line is open. Mute does not close a line: an open line closes after the usual
   silence, counted from Mute if you were speaking, and when it would have without Mute if the line
   was already quiet; it is billed like any silence, so Mute does not save realtime minutes.

@@ -4,6 +4,14 @@ All notable changes to this project are listed here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow
 [Semantic Versioning](https://semver.org/).
 
+## [0.6.2]
+
+### Fixed
+
+- A handoff the voice makes while the call is muted no longer reaches a session. With the
+  microphone off you cannot have asked for it: the voice had read a line Claude sent, which it
+  takes as yours, and handed it on as a request. The voice is now told nothing was handed off.
+
 ## [0.6.1]
 
 ### Changed

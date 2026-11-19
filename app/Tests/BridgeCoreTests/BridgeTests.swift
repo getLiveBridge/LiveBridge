@@ -659,6 +659,25 @@ struct BridgeTests {
       ])
   }
 
+  /// While muted the owner cannot speak, so a handoff then is the voice's own, made from lines
+  /// it was given: it reaches no session, and the voice is told it did not.
+  @Test func aHandoffWhileMutedReachesNoSession() async throws {
+    try await join(a, "Alpha")
+    _ = try await registry.poll(a)  // a fresh target may already owe a summary
+    await live()
+    #expect(await eventually { await bridge.status.call == .live })
+    await bridge.perform(.mute)
+    voice.emit(.handoff(request(1)))
+    #expect(
+      await eventually { await voice.added.contains { $0.hasPrefix("[FAILED] LiveBridge:") } })
+    var work: [Work] = []
+    while let next = try await registry.poll(a) { work.append(next) }
+    #expect(!work.contains(.request(request(1))))
+    await bridge.perform(.unmute)
+    voice.emit(.handoff(request(2)))
+    #expect(try await eventually { try await registry.poll(a) == .request(request(2)) })
+  }
+
   /// The menu's Load context asks only the target for its summary.
   @Test func loadContextAsksTheTarget() async throws {
     try await join(a, "Alpha")
