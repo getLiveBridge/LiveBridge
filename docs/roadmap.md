@@ -6,10 +6,8 @@ prose above the trail marker.
 
 ## Now
 
-0.6.1 is out: a summary that fails is no longer asked for again at every line, and one bad value
-in `settings.json` no longer resets the others. Since 0.6.0, Haiku 5.5, or a model you choose,
-writes a session's context, and a line waits up to 10 seconds for it; Settings sets how long the
-line stays open in quiet. A short demo recording follows it.
+0.6.2 is out: while the microphone is muted, voice handoffs do not reach Claude Code. See the
+[changelog](../CHANGELOG.md) for the release history. A short demo recording is next.
 
 ## Next
 

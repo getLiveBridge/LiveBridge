@@ -300,7 +300,10 @@ Pulsa **Start**, en la banda situada sobre el prompt o en el menú de la barra d
   línea se pierden.
 - **Mute** (junto a **Stop**, en la banda y en la tarjeta de llamada del menú; **Unmute** mientras
   está silenciado) libera tu micrófono mientras la llamada continúa: una respuesta de Claude sigue
-  abriendo la línea y pasa a la voz para que la diga. La banda mantiene la fase y añade `· muted`;
+  abriendo la línea y pasa a la voz para que la diga. Mientras está
+  silenciado, la voz no entrega nada a una sesión: no pudiste pedirlo, así que esa entrega es la voz
+  actuando sobre las líneas que recibió, y la app le dice que no se entregó nada. Repítelo tras
+  **Unmute**. La banda mantiene la fase y añade `· muted`;
   el menú dice "Muted — line closed" mientras no hay línea abierta. Mute no cierra la línea: una
   línea abierta se cierra tras el silencio habitual, contado desde Mute si estabas hablando, y
   cuando lo habría hecho sin Mute si la línea ya estaba en silencio; se factura como cualquier

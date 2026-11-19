@@ -671,13 +671,17 @@ public actor Bridge: Router {
     guard realtime === controller else { return }
     switch event {
     case .handoff(let request):
-      let session = await route(request)
+      // While muted the owner cannot speak: a handoff then is the voice's own, made from the
+      // lines it was given, which it reads as the owner's (ADR 0001 (b)). It reaches no session.
+      let isMuted = machine.isMuted
+      let session = isMuted ? nil : await route(request)
       await send(.handedOff(session))
       if session == nil {
-        await send(
-          .deliver(
-            AnswerShaper.line(
-              .failed, label: "LiveBridge", body: "no Claude Code session is joined.")))
+        let why =
+          isMuted
+          ? "the microphone is muted, so nothing was handed off."
+          : "no Claude Code session is joined."
+        await send(.deliver(AnswerShaper.line(.failed, label: "LiveBridge", body: why)))
       }
     case .userSpeaking(let words): growing.add(words, from: .owner)
     case .userUtterance(let text):

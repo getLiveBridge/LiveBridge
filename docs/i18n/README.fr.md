@@ -314,7 +314,10 @@ parlez.
   ligne se ferme sont perdus.
 - **Mute** (à côté de **Stop**, dans la bande et dans la carte d'appel du menu ; **Unmute** quand le
   micro est coupé) libère votre microphone pendant que l'appel continue : une réponse de Claude
-  ouvre toujours la ligne et passe à la voix pour qu'elle la dise. La bande garde la phase et ajoute
+  ouvre toujours la ligne et passe à la voix pour qu'elle la dise. Micro coupé, la
+  voix ne transmet rien à une session : vous n'avez pas pu le demander, donc une telle transmission
+  est la voix qui agit sur les lignes qu'elle a reçues, et l'app lui dit que rien n'a été transmis.
+  Répétez-le après **Unmute**. La bande garde la phase et ajoute
   `· muted` ; le menu affiche « Muted — line closed » tant qu'aucune ligne n'est ouverte. Mute ne
   ferme pas la ligne : une ligne ouverte se ferme après le silence habituel, compté à partir de Mute
   si vous parliez, et quand elle l'aurait fait sans Mute si la ligne était déjà silencieuse ; elle
