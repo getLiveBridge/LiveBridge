@@ -45,7 +45,8 @@ microphone or Claude:
 - `CallMachine`: the call's phase — `off`, `listening` (microphone and local voice detection only),
   `connecting`, `live` (a realtime session is open) — and the effects of each event. It also keeps
   `isMuted`, orthogonal to the phase: while muted the microphone is released, speech is ignored, and
-  a result from Claude still opens the line. Mute closes no line. It ends the owner's speech only if
+  a result from Claude still opens the line. A handoff while muted reaches no session, since the owner
+  cannot have spoken it: `Bridge` routes none and gives the voice a `[FAILED] LiveBridge` line instead. Mute closes no line. It ends the owner's speech only if
   they were speaking; then an open line's silence is counted from Mute, as if they had
   stopped speaking when they pressed it, and a line that was already quiet closes when it would have
   without Mute. A handoff whose answer is still awaited can still keep a line open, up to 120 s
