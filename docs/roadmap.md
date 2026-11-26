@@ -6,7 +6,7 @@ prose above the trail marker.
 
 ## Now
 
-0.6.2 is out: while the microphone is muted, voice handoffs do not reach Claude Code. See the
+0.6.3 is out: tested with codex 0.172.0, whose voice is GPT-Live-1.1. See the
 [changelog](../CHANGELOG.md) for the release history. A short demo recording is next.
 
 ## Next
