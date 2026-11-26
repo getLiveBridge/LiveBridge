@@ -76,7 +76,7 @@ scripts/build-app.sh --release
 
 - Apple Silicon 上的 macOS 14 或更高版本。
 - Claude Code 2.1.301 或更高版本。
-- [Codex CLI](https://github.com/openai/codex)（`codex`，已在 0.166.0 上测试），通过
+- [Codex CLI](https://github.com/openai/codex)（`codex`，已在 0.172.0 上测试），通过
   Homebrew（`brew install --cask codex`）或 npm（`npm install -g @openai/codex`）安装，位于你的 shell 在终端窗口中设置的
   `PATH` 上，并已用 `codex login` 登录到其 Codex 包含语音的 ChatGPT 套餐（Plus、Pro、Business、Enterprise 或 Education，见 [OpenAI 的 Codex 定价](https://learn.chatgpt.com/docs/pricing)）。如果 LiveBridge 无法读取某个 codex 的
   `codex features list`，它会拒绝使用该 codex，因此其他版本可能要等 LiveBridge 更新后才能启动。

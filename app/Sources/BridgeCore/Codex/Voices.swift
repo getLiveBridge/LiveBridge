@@ -1,8 +1,8 @@
 /// The realtime voices codex offers (`thread/realtime/listVoices`, experimental).
 public enum Voices {
-  /// The voices for realtime V3, the version the app's sessions use. codex 0.166.0 answers
-  /// `{voices: {v1, v2, v3, defaultV1, defaultV2}}` and names no V3 default, so the default is
-  /// left to codex by sending no `voice`.
+  /// The voices for realtime V3, the version the app's sessions use. codex 0.166.0 to 0.172.0
+  /// answer `{voices: {v1, v2, v3, defaultV1, defaultV2}}` and name no V3 default, so the
+  /// default is left to codex by sending no `voice`.
   public static func list(client: any RPCClient, timeout: Duration = .seconds(20)) async throws
     -> [String]
   {
