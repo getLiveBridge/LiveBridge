@@ -4,6 +4,14 @@ All notable changes to this project are listed here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow
 [Semantic Versioning](https://semver.org/).
 
+## [0.6.3]
+
+### Changed
+
+- Tested with codex 0.172.0, whose voice is GPT-Live-1.1 (codex 0.171.0 and later): LiveBridge
+  needs no change for it, and the README's Requirements name 0.172.0. Update codex
+  (`brew upgrade --cask codex` or `npm install -g @openai/codex`) to talk to the new voice.
+
 ## [0.6.2]
 
 ### Fixed

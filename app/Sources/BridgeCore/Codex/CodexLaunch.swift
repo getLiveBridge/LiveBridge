@@ -79,9 +79,10 @@ public enum CodexLaunch {
   /// The codex features the voice keeps on. Every other feature `codex features list` reports
   /// is turned off, so one a later codex adds is off too (fail closed). The primary controls
   /// stay the read-only sandbox, `approval_policy="never"` and interrupting every codex turn;
-  /// this narrows what an uninterrupted turn has. Derived against codex 0.166.0: the realtime
-  /// voice works with every feature off (`scripts/smoke.sh`). `secret_auth_storage` only says
-  /// where codex keeps the login: turning it off would hide a keychain login, and it runs no tool.
+  /// this narrows what an uninterrupted turn has. Derived against codex 0.166.0 and checked
+  /// again on 0.172.0: the realtime voice works with every feature off (`scripts/smoke.sh`).
+  /// `secret_auth_storage` only says where codex keeps the login: turning it off would hide a
+  /// keychain login, and it runs no tool.
   /// The two proxy features only choose how codex reaches OpenAI behind a proxy.
   public static let allowed: Set<String> = [
     "respect_system_proxy", "secret_auth_storage", "system_proxy_fallback",
