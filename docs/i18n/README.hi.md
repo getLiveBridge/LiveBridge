@@ -45,16 +45,15 @@ session में क्या टाइप करते हैं और Claude
 <p align="center">GIF में आवाज़ नहीं है: <a href="https://getlivebridge.com/assets/livebridge-demo.mp4">आवाज़ के साथ 64 सेकंड का demo</a> getlivebridge.com पर देखें।</p>
 
 **डिज़ाइन से ही लोकल।** कोई telemetry नहीं और अपना कोई server नहीं: LiveBridge आपके Mac पर आपके अपने
-codex और आपके अपने Claude Code के बीच एक bridge है। App और mod सिर्फ़ एक Unix socket पर बात करते
-हैं, जिसे केवल आपका user खोल सकता है, और app किसी network port पर listen नहीं करता। जो traffic ये
-दोनों tools पहले से भेजते हैं (voice line का traffic आपके codex के ज़रिए OpenAI को, सिर्फ़ तब जब line खुली हो, साथ में जुड़े session में आपका टाइप किया text, और Claude का काम आपके Claude Code session के ज़रिए Anthropic को), उसके अलावा app का
-अपना traffic सिर्फ़ ये है: menu खोलने पर थोड़ी देर चलने वाला एक codex OpenAI से आपके Codex usage के आँकड़े
-माँगता है, call बंद हो तब भी; और [updates](guide.hi.md#अपडेट-करना) का traffic: GitHub से नए release की अपने-आप होने वाली जाँच
-(दिन में एक बार, और हर launch पर जब तक उसके बताए release को install न किया गया हो), जिसे आप बंद कर
-सकते हैं; **Check for update** दबाने पर वही जाँच; नए release की सूचना देने पर `gh auth status`; और
-**Install** click करने पर download, उसकी जाँच और mod का update। [गोपनीयता](privacy.hi.md) में ठीक-ठीक
-लिखा है कि OpenAI तक क्या पहुँचता है, और GitHub को भेजे जाने वाले app के requests के नाम भी वहीं
-हैं; [SECURITY.md](../../SECURITY.md) बताता है कि यह किस चीज़ से बचाता है और किस चीज़ से नहीं।
+codex और आपके अपने Claude Code के बीच एक bridge है। mod app से एक Unix socket पर बात करता है, जिसे
+केवल आपका user खोल सकता है, और app किसी network port पर listen नहीं करता। आपकी आवाज़, जुड़े session
+में आपका टाइप किया text, और Claude के जवाब और सारांश आपके codex के ज़रिए OpenAI को जाते हैं, सिर्फ़
+तब जब कोई line खुली हो; Claude का काम आपके Claude Code के ज़रिए Anthropic को जाता है। app का अपना
+traffic सिर्फ़ इतना है: menu खोलने पर आपके codex के ज़रिए usage पढ़ना, और GitHub से
+[updates](guide.hi.md#अपडेट-करना), जिनकी अपने-आप होने वाली जाँच आप बंद कर सकते हैं।
+[गोपनीयता](privacy.hi.md) में ठीक-ठीक लिखा है कि OpenAI तक क्या पहुँचता है, और GitHub को जाने वाला
+हर request भी; [SECURITY.md](../../SECURITY.md) बताता है कि यह किस चीज़ से बचाता है और किस चीज़ से
+नहीं।
 
 > **स्थिति:** 0.x, एक maintainer। **अनौपचारिक:** Anthropic या OpenAI से संबद्ध नहीं, न उनके द्वारा
 > समर्थित या endorsed। LiveBridge आपके ChatGPT login पर codex का experimental realtime API इस्तेमाल

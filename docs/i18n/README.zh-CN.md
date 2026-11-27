@@ -40,12 +40,7 @@ Claude 工作时你不必让线路一直打开：它的答复会重新打开已�
 
 <p align="center">GIF 没有声音：<a href="https://getlivebridge.com/assets/livebridge-demo.mp4">在 getlivebridge.com 观看 64 秒的有声演示</a>。</p>
 
-**设计上完全本地。** 没有遥测，也没有自己的服务器：LiveBridge 只是你 Mac 上的一座桥，连接你自己的 codex 与你自己的
-Claude Code。应用与模组之间通过只有你的用户才能打开的 Unix 套接字通信，应用不监听任何网络端口。除了这两个工具本来就会发送的内容
-（语音线路经你的 codex 发往 OpenAI，仅在线路打开期间，其中包括你在已加入的会话中输入的内容；Claude 的工作经你的 Claude Code 会话发往 Anthropic），
-应用自身唯一的流量是：你打开菜单时，一个短时运行的 codex 向 OpenAI 请求你的 Codex 用量数据（通话关闭时同样如此），以及用于[更新](guide.zh-CN.md#更新应用)的流量：向 GitHub 自动检查是否有新版本（每天一次，以及在它通知过的版本尚未安装时的每次启动），可以关闭；
-你点击 **Check for update** 时的同一检查；通知新版本时的 `gh auth status`；以及你点击 **Install** 时的下载、验证和模组更新。
-[隐私](privacy.zh-CN.md)准确列出了哪些内容会到达 OpenAI，并列出应用向 GitHub 发出的请求；[SECURITY.md](../../SECURITY.md) 说明了它能防范什么、不能防范什么。
+**设计上完全本地。** 没有遥测，也没有自己的服务器：LiveBridge 只是你 Mac 上的一座桥，连接你自己的 codex 与你自己的 Claude Code。模组通过只有你的用户才能打开的 Unix 套接字与应用通信，应用不监听任何网络端口。你的语音、你在已加入的会话中输入的内容，以及 Claude 的答复和摘要，经你的 codex 发往 OpenAI，且仅在线路打开期间；Claude 的工作经你的 Claude Code 发往 Anthropic。应用自身唯一的流量是：你打开菜单时经你的 codex 读取用量，以及来自 GitHub 的[更新](guide.zh-CN.md#更新应用)，其自动检查可以关闭。[隐私](privacy.zh-CN.md)准确列出了哪些内容会到达 OpenAI，以及发往 GitHub 的每一个请求；[SECURITY.md](../../SECURITY.md) 说明了它能防范什么、不能防范什么。
 
 > **状态：** 0.x，一位维护者。**非官方项目：** 与 Anthropic 或 OpenAI 无任何隶属、认可或支持关系。LiveBridge
 > 在你的 ChatGPT 登录上使用 codex 的实验性实时 API，OpenAI 并未将其作为第三方应用的途径写入文档，任何一次 codex

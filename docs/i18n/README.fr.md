@@ -45,20 +45,16 @@ dans la session et ce que Claude répond, vous pouvez donc passer de la parole a
 <p align="center">Le GIF est muet : <a href="https://getlivebridge.com/assets/livebridge-demo.mp4">regardez la démo de 64 secondes avec le son</a> sur getlivebridge.com.</p>
 
 **Local par conception.** Pas de télémétrie et pas de serveur propre : LiveBridge est un pont sur
-votre Mac entre votre propre codex et votre propre Claude Code. L'application et le mod
-communiquent uniquement par un socket Unix que seul votre utilisateur peut ouvrir, et
-l'application n'écoute sur aucun port réseau. En dehors de ce que ces deux outils envoient déjà
-(la ligne vocale vers OpenAI via votre codex, uniquement tant qu'elle est ouverte, avec ce que vous tapez dans une session rejointe, et le travail
-de Claude vers Anthropic via votre session Claude Code), le seul trafic propre à l'application
-est un codex éphémère qui, à l'ouverture du menu, demande à OpenAI vos chiffres d'utilisation de
-Codex, même quand l'appel est coupé, et celui des [mises à jour](guide.fr.md#mises-à-jour) : une demande automatique à GitHub pour savoir s'il existe
-une nouvelle version (quotidienne, et à chaque lancement tant qu'une version qu'elle a annoncée
-n'est pas installée), que vous pouvez désactiver ; la même demande quand vous cliquez sur **Check
-for update** ; `gh auth status` quand une nouvelle version est annoncée ; et, quand vous cliquez
-sur **Install**, le téléchargement, sa vérification et la mise à jour du mod.
-[Confidentialité](privacy.fr.md) liste précisément ce qui parvient à OpenAI et nomme les
-requêtes de l'application vers GitHub ; [SECURITY.md](../../SECURITY.md) explique ce que cela protège
-et ce que cela ne protège pas.
+votre Mac entre votre propre codex et votre propre Claude Code. Le mod parle à l'application par un
+socket Unix que seul votre utilisateur peut ouvrir, et l'application n'écoute sur aucun port réseau.
+Votre voix, ce que vous tapez dans une session rejointe, et les réponses et résumés de Claude vont à
+OpenAI via votre codex, uniquement tant qu'une ligne est ouverte ; le travail de Claude va à
+Anthropic via votre Claude Code. Le seul trafic propre à l'application est une lecture de
+l'utilisation via votre codex quand vous ouvrez le menu, et les [mises à
+jour](guide.fr.md#mises-à-jour) depuis GitHub, dont vous pouvez désactiver la vérification
+automatique. [Confidentialité](privacy.fr.md) liste précisément ce qui parvient à OpenAI et chaque
+requête vers GitHub ; [SECURITY.md](../../SECURITY.md) explique ce que cela protège et ne protège
+pas.
 
 > **Statut :** 0.x, un seul mainteneur. **Non officiel :** ni affilié à Anthropic ou OpenAI, ni
 > approuvé ni soutenu par eux. LiveBridge utilise l'API temps réel expérimentale de codex avec votre
