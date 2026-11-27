@@ -451,6 +451,10 @@ voice's words:
   the 19:05 one the owner heard the voice start the result, and it stopped in mid-sentence.
 - Before a seeded line's voice speaks, the service reads what the line was given: for a long result
   and question, `session.context.appended` ran to `end_ms` 3200 after `session.started`.
+- The voice's sound read from the peer's `inbound-rtp` stats in the WKWebView page (`voice.js`, the
+  microphone's detector at -45 dB) works: in two smoke runs on 2026-11-27, `voiceStarted` and
+  `voiceEnded` bracketed each of the voice's 6 replies (2.0 to 4.3 s each), each line closed 20.4 s
+  after its last `voiceEnded`, and the 50 s of silence between the lines gave no `voiceStarted`.
 
 ### Claude Code mod API
 
