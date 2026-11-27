@@ -345,6 +345,8 @@ public actor Bridge: Router {
     switch event {
     case .speechStarted: await send(.speechStarted)
     case .speechEnded: await send(.speechEnded)
+    case .voiceStarted: await send(.voiceSoundStarted)
+    case .voiceEnded: await send(.voiceSoundEnded)
     case .level: break
     case .failed(let reason):
       await send(.audioFailed(reason))

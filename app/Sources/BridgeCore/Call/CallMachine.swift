@@ -55,6 +55,9 @@ public enum CallEvent: Equatable, Sendable {
   case graceElapsed
   /// The voice is saying something (a transcript delta); the owner's words were recognised.
   case assistantSpeaking, userTranscribed
+  /// The voice's sound began or ended, which the page hears in its track. Its text comes many
+  /// seconds later (ADR 0001 (s)), so only the sound tells the line in time that the voice speaks.
+  case voiceSoundStarted, voiceSoundEnded
   /// `opensLine`: the bridge found that the line opens a closed line (the target's answer,
   /// question or approval notice, while the target's conversation holds a turn of the owner's).
   /// `onOwnLine`: the open line is about the line's session, so its question or approval notice is
@@ -161,6 +164,8 @@ public struct CallMachine: Sendable {
   private var isAwaitingFirstWord = false
   /// Local voice detection hears sound; the timer then allows `timeouts.noise`.
   private var isSoundOn = false
+  /// The voice's track plays sound; the timer then allows `timeouts.noise` too.
+  private var isVoiceSounding = false
   /// A silence timer is counting: armed, and neither elapsed nor cancelled since.
   private var isSilenceArmed = false
   /// The counting timer was started by a change of the timeouts, so the owner may still be
@@ -206,7 +211,7 @@ public struct CallMachine: Sendable {
       min(max(seconds, range.lowerBound), range.upperBound)
     }
 
-    public init(silence: Int = 20, firstWord: Int = 5, noise: Int = 90) {
+    public init(silence: Int = 20, firstWord: Int = 10, noise: Int = 90) {
       self.silence = silence
       self.firstWord = firstWord
       self.noise = noise
@@ -220,7 +225,7 @@ public struct CallMachine: Sendable {
     isArmedByChange = false
     let firstWord = timeouts.firstWord > 0 ? timeouts.firstWord : timeouts.silence
     let quiet = isAwaitingFirstWord ? firstWord : timeouts.silence
-    let seconds = isSoundOn ? timeouts.noise : quiet
+    let seconds = isSoundOn || isVoiceSounding ? timeouts.noise : quiet
     isSilenceArmed = seconds > 0
     return isSilenceArmed ? .armSilenceTimer(seconds: seconds) : .cancelSilenceTimer
   }
@@ -318,6 +323,13 @@ public struct CallMachine: Sendable {
       isSoundOn = true
       isAwaitingFirstWord = false
       return [armSilence()]
+    case (.live, .voiceSoundStarted):
+      isVoiceSounding = true
+      isAwaitingFirstWord = false
+      return [armSilence()]
+    case (.live, .voiceSoundEnded):
+      isVoiceSounding = false
+      return [armSilence()] + graceIfQuiet
     case (.live, .assistantSpeaking):
       replyCanSay = replyCanSay ?? pending
       isVoiceSpeaking = true
@@ -342,7 +354,7 @@ public struct CallMachine: Sendable {
       return [armSilence()] + graceIfQuiet
     case (.live, .graceElapsed):
       let held = unheard.filter(\.isHeld).map(\.line)
-      guard !held.isEmpty, !isSoundOn, !isVoiceSpeaking else { return [] }
+      guard !held.isEmpty, !isSomeoneSpeaking else { return [] }
       unheard = withoutHolds
       return held.map { .speak($0) } + [armSilence()]
     case (.live, .resultWindowElapsed), (.connecting, .resultWindowElapsed):
@@ -357,6 +369,7 @@ public struct CallMachine: Sendable {
       // reply is cut off, and no end of it will come.
       phase = .connecting
       isVoiceSpeaking = false
+      isVoiceSounding = false
       isAckUnfinished = false
       replyCanSay = nil
       return [.reopenRealtime(preroll: isSoundOn)]
@@ -440,6 +453,7 @@ public struct CallMachine: Sendable {
       isSilenceDue = false
       isSilenceArmed = false
       isVoiceSpeaking = false
+      isVoiceSounding = false
       isAckUnfinished = false
       replyCanSay = nil
       connectingSynced = []
@@ -453,7 +467,7 @@ public struct CallMachine: Sendable {
     line.session != nil && line.kind.answers && !isSomeoneSpeaking ? [.confirmAnswer] : []
   }
 
-  private var isSomeoneSpeaking: Bool { isSoundOn || isVoiceSpeaking }
+  private var isSomeoneSpeaking: Bool { isSoundOn || isVoiceSpeaking || isVoiceSounding }
 
   /// A new line would fail the same way, so the call ends, as Stop does, and keeps what waits to
   /// be said. Start tries once more.

@@ -355,7 +355,9 @@ of the app's two sounds means). The line stays open for its result up to
 `CallMachine.resultWindowSeconds` (120 s) after the latest handoff, however silent it is (sound
 without words still closes it after the noise timeout). A result from a session handed a request in that window
 is given to the voice to say now (`thread/realtime/appendSpeech`, speakable text) once neither the
-owner (local voice detection) nor the voice is speaking; when either was, the bridge waits until
+owner (local voice detection) nor the voice is speaking (its transcript, or the sound of its track,
+which the page reads from the peer's inbound audio stats every 100 ms: the text comes seconds after the
+sound, [ADR 0001 (s)](../adr/0001-platform-findings.md)); when either was, the bridge waits until
 both are silent and then a grace of 0.8 s. The window then ends and the silence rule closes the
 line. A window that passes with no result closes the line once it is silent; when the result comes,
 it opens the line again, as below. A question or an approval notice of the session the open line is

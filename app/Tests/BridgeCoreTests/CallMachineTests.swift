@@ -22,7 +22,7 @@ struct CallMachineTests {
   static let limit = Problem.codex(.realtimeError("You’ve hit your usage limit."))
   static let cap = CallEffect.armSilenceTimer(seconds: 90)
   /// A line a result opened waits this long for the voice's first word.
-  static let firstWord = CallEffect.armSilenceTimer(seconds: 5)
+  static let firstWord = CallEffect.armSilenceTimer(seconds: 10)
   static let alpha = SessionID(rawValue: "00000000-0000-0000-0000-000000000001")
   static let beta = SessionID(rawValue: "11111111-0000-0000-0000-000000000002")
   /// Lines of the bridge's own, which no session waits for.
@@ -178,6 +178,14 @@ struct CallMachineTests {
     row(
       "theOwnersWordsOnAnOpenedLineGetTheUsualSilence", [.start, opening(result), .connected],
       .userTranscribed, .live, [arm], pending: [result]),
+    row(
+      "theVoicesSoundOnAnOpenedLineHoldsItOpenUpToTheNoiseCap",
+      [.start, opening(result), .connected], .voiceSoundStarted, .live, [cap],
+      pending: [result]),
+    row(
+      "theVoiceFallingSilentOnAnOpenedLineGetsTheUsualSilence",
+      [.start, opening(result), .connected, .voiceSoundStarted], .voiceSoundEnded, .live, [arm],
+      pending: [result]),
     row(
       "theVoiceSpeakingOnAnOpenedLineGetsTheUsualSilence",
       [.start, opening(result), .connected], .assistantSpeaking, .live, [arm],
@@ -350,6 +358,13 @@ struct CallMachineTests {
       "aGraceSpeaksItOnlyOnce",
       waiting + [.speechStarted, fromAlpha, .speechEnded, .graceElapsed], .graceElapsed, .live,
       [], pending: [result]),
+    row(
+      "resultWhileTheVoiceSoundsWaits", live + [.handedOff(alpha), .voiceSoundStarted],
+      fromAlpha, .live, [cap], pending: [result]),
+    row(
+      "theVoiceFallingSilentStartsTheGrace",
+      live + [.handedOff(alpha), .voiceSoundStarted, fromAlpha], .voiceSoundEnded, .live,
+      [arm, grace], pending: [result]),
     row(
       "resultWhileTheVoiceSpeaksWaits", live + [.handedOff(alpha), .assistantSpeaking],
       fromAlpha, .live, [arm], pending: [result]),

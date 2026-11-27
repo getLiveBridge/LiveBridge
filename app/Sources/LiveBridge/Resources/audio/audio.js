@@ -1,7 +1,7 @@
 // The audio side of a LiveBridge call, run in an invisible WKWebView. The app calls `LB.*` and
 // awaits the returned promises; the page posts `speechStarted`, `speechEnded`, `level`,
-// `microphoneDenied` (the app has the sentence), `audioFailed` and `lineError` to
-// `window.webkit.messageHandlers.bridge`.
+// `voiceStarted`, `voiceEnded`, `microphoneDenied` (the app has the sentence), `audioFailed` and
+// `lineError` to `window.webkit.messageHandlers.bridge`.
 //
 // The microphone runs through one 1024-sample processor. While the line is closed it feeds the
 // voice detector and the pre-roll; from the first word (or `makeOffer`) on, the pre-roll and
@@ -15,6 +15,7 @@ import { createVad, dbfs, rms } from './vad.js';
 import { createLineAudio } from './preroll.js';
 import { within } from './deadline.js';
 import { lineError } from './events.js';
+import { voiceRms } from './voice.js';
 import { MIC_DEADLINE_MS, createMicrophone, microphoneFailure } from './microphone.js';
 
 const FRAME = 1024;
@@ -34,6 +35,7 @@ let pc = null;
 let channel = null;
 let remote = null;
 let out = null; // the peer's outgoing track
+let voiceTimer = null; // reads how loud the voice is while its track plays
 let sending = false; // the line is open: the queue plays into the peer's track
 let frames = 0;
 
@@ -194,6 +196,7 @@ async function makeOffer(keepPreroll = true) {
     remote = new Audio();
     remote.srcObject = event.streams[0] ?? new MediaStream([event.track]);
     remote.play().catch(() => {});
+    watchVoice(peer);
   };
   channel = peer.createDataChannel('oai-events');
   const ice = gathered(peer);
@@ -202,6 +205,27 @@ async function makeOffer(keepPreroll = true) {
   if (peer !== pc) throw closed();
   if (!reached) throw fail(say.localNetwork);
   return peer.localDescription.sdp;
+}
+
+/** Posts `voiceStarted` and `voiceEnded` as the voice's track grows loud and falls silent, read
+ * from the peer's inbound audio stats every 100 ms, with the same detection as the microphone. */
+function watchVoice(peer) {
+  clearInterval(voiceTimer);
+  const detector = createVad();
+  let previous = null;
+  voiceTimer = setInterval(async () => {
+    const stats = await peer.getStats().catch(() => null);
+    if (peer !== pc || !stats) return;
+    let report = null;
+    stats.forEach((entry) => {
+      if (entry.type === 'inbound-rtp' && entry.kind === 'audio') report = entry;
+    });
+    if (!report) return;
+    const level = voiceRms(previous, report);
+    previous = report;
+    const decision = level === null ? null : detector.push(level, performance.now());
+    if (decision) post({ type: decision === 'start' ? 'voiceStarted' : 'voiceEnded' });
+  }, 100);
 }
 
 /** Applies the answer and resolves at the data channel's `session.started` (ADR 0001 (d)). */
@@ -238,6 +262,8 @@ function closePeer() {
 }
 
 function dropPeer() {
+  clearInterval(voiceTimer);
+  voiceTimer = null;
   channel?.close();
   pc?.close();
   remote?.pause();
