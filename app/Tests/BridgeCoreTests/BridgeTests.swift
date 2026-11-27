@@ -659,6 +659,46 @@ struct BridgeTests {
       ])
   }
 
+  /// Past 4 KiB codex moves finished lines out of its handoff transcript, so a long turn reached
+  /// the session as its tail. The request carries every line said since the last one, as the
+  /// app heard it, and the line still being said.
+  @Test func aHandoffCarriesEverythingSaidSinceTheLastOne() async throws {
+    await live()
+    try await handOff()
+    try await answerFirstRequest()
+    voice.emit(.userUtterance("A long question about the README files."))
+    voice.emit(.assistantUtterance("Mm-hm."))
+    voice.emit(.userSpeaking(" Only the obvious things"))
+    let cut = VoiceRequest(
+      id: RequestID(rawValue: "request-2"), brief: "Only the obvious things",
+      transcript: [Utterance(role: .assistant, text: "Mm-hm.")])
+    voice.emit(.handoff(cut))
+    var whole = cut
+    whole.transcript = [
+      Utterance(role: .user, text: "A long question about the README files."),
+      Utterance(role: .assistant, text: "Mm-hm."),
+      Utterance(role: .user, text: "Only the obvious things"),
+    ]
+    #expect(try await eventually { try await registry.poll(a) == .request(whole) })
+  }
+
+  /// A line handed off while it was being said ends after the handoff: the next request gets
+  /// only its words past what was handed off.
+  @Test func aLineHandedOffMidwayIsNotHandedOffAgain() async throws {
+    await live()
+    voice.emit(.userSpeaking(" Check the build"))
+    voice.emit(.handoff(request(1)))
+    var first = request(1)
+    first.transcript = [Utterance(role: .user, text: "Check the build")]
+    #expect(try await eventually { try await registry.poll(a) == .request(first) })
+    try await answerFirstRequest()
+    voice.emit(.userUtterance("Check the build, please."))
+    voice.emit(.handoff(request(2)))
+    var expected = request(2)
+    expected.transcript = [Utterance(role: .user, text: ", please.")]
+    #expect(try await eventually { try await registry.poll(a) == .request(expected) })
+  }
+
   /// While muted the owner cannot speak, so a handoff then is the voice's own, made from lines
   /// it was given: it reaches no session, and the voice is told it did not.
   @Test func aHandoffWhileMutedReachesNoSession() async throws {
@@ -1033,7 +1073,13 @@ struct BridgeTests {
   /// Hands `request(1)` to Alpha on the open line and lets Alpha take it.
   func handOff() async throws {
     voice.emit(.handoff(request(1)))
-    #expect(try await eventually { try await registry.poll(a) == .request(request(1)) })
+    #expect(try await eventually { try await polls(request(1), at: a) })
+  }
+
+  /// Whether `session`'s next work is `request`, whatever speech it carries.
+  func polls(_ request: VoiceRequest, at session: SessionID) async throws -> Bool {
+    guard case .request(let work) = try await registry.poll(session) else { return false }
+    return work.id == request.id && work.brief == request.brief
   }
 
   func answerFirstRequest() async throws {
@@ -4034,7 +4080,7 @@ struct BridgeTests {
     await test.bridge.audioEvent(.speechStarted)
     #expect(await eventually { await test.bridge.status.call == .live })
     await voices.made.last?.emit(.handoff(request(2)))
-    #expect(try await eventually { try await test.registry.poll(b) == .request(request(2)) })
+    #expect(try await eventually { try await test.polls(request(2), at: b) })
   }
 
   /// The band's Start posts a target: of the same session it changes nothing, so a pause at the

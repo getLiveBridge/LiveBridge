@@ -6,7 +6,7 @@ prose above the trail marker.
 
 ## Now
 
-0.6.3 is out: tested with codex 0.172.0, whose voice is GPT-Live-1.1. See the
+0.6.4 is out: a long spoken request reaches Claude whole. See the
 [changelog](../CHANGELOG.md) for the release history. A short demo recording is next.
 
 ## Next

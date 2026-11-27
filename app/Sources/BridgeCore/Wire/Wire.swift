@@ -28,7 +28,7 @@ public struct VoiceRequest: Codable, Sendable, Equatable {
   public var id: RequestID
   /// The voice model's self-contained request (codex `input_transcript`).
   public var brief: String
-  /// The recognised speech since the previous handoff (codex `active_transcript`).
+  /// The recognised speech since the previous handoff, as the app heard it (`HandoffSpeech`).
   public var transcript: [Utterance]
 }
 
