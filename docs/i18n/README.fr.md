@@ -71,28 +71,39 @@ et ce que cela ne protège pas.
 ## Démarrage rapide
 
 ```sh
-# 1. The mod, from this repository's marketplace
+# 1. The app, from LiveBridge's own Homebrew tap
+brew install --cask getlivebridge/tap/livebridge
+
+# 2. The mod, from this repository's marketplace
 claude plugin marketplace add getLiveBridge/LiveBridge
 claude plugin install livebridge@livebridge
-
-# 2. The app, built from source, installed in /Applications and opened
-git clone https://github.com/getLiveBridge/LiveBridge.git
-cd livebridge
-scripts/build-app.sh --release
 ```
 
-3. Dans la session Claude Code à laquelle vous voulez parler, tapez `/live`.
-4. Appuyez sur **Start** dans la bande au-dessus du prompt, autorisez le microphone, et parlez.
+3. Ouvrez LiveBridge depuis Applications. La première fois, macOS demande s'il faut ouvrir une
+   application téléchargée depuis internet ; cliquez sur **Open**. LiveBridge vit dans la barre des
+   menus.
+4. Dans la session Claude Code à laquelle vous voulez parler, tapez `/live`. Elle répond « Joined
+   LiveBridge. », et une bande apparaît au-dessus du prompt avec **Voice off**, la session à laquelle
+   parle l'appel, et **Start**.
+5. Appuyez sur **Start**. La première fois, macOS demande l'accès au microphone : autorisez-le. Il
+   peut aussi demander si LiveBridge peut trouver des appareils sur votre réseau local ; la ligne
+   vocale en a besoin aussi. La bande affiche alors **Listening** : un détecteur de voix sur votre
+   Mac attend que vous parliez, et rien n'est encore envoyé.
+6. Demandez « Sur quoi travaille cette session ? ». La bande affiche **Connecting**, puis **Live**,
+   et la voix répond, à partir de la conversation de la session ou en transmettant la question à
+   Claude. Demandez une modification : la voix la transmet à Claude et vous dit le résultat quand
+   Claude a fini. Quand la conversation se tait, la ligne se ferme et la bande affiche de nouveau
+   **Listening** ([quand](#facturation-maîtrisée-par-conception)).
 
-Vous préférez ne pas compiler ? Chaque [version](https://github.com/getLiveBridge/LiveBridge/releases/latest)
-fournit l'application sous forme d'image disque, compilée et attestée par GitHub Actions ;
-[Depuis l'image disque](#depuis-limage-disque) explique comment la vérifier et l'ouvrir. Le mod
-s'installe de la même manière dans les deux cas.
+Pas de Homebrew ? Chaque [version](https://github.com/getLiveBridge/LiveBridge/releases/latest)
+fournit l'application sous forme d'image disque, compilée et attestée par GitHub Actions
+([Depuis l'image disque](#depuis-limage-disque)), ou compilez-la vous-même
+([Depuis les sources](#depuis-les-sources)). Le mod s'installe de la même manière dans tous les cas.
 
 Si `/live` est introuvable dans une session déjà ouverte, rouvrez la session
-([pourquoi](#limitations-connues)). La mise à jour, les autorisations, la conservation de
-l'autorisation du microphone d'une recompilation à l'autre et la désinstallation sont décrites
-sous [Installation](#installation).
+([pourquoi](#limitations-connues)). [Installation](#installation) couvre l'image disque, la
+compilation depuis les sources et les autorisations ; [Mises à jour](#mises-à-jour),
+[Désinstallation](#désinstallation) et [Utilisation](#utilisation) couvrent le reste.
 
 ## Prérequis
 

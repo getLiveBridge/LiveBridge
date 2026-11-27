@@ -55,23 +55,22 @@ Claude Code。应用与模组之间通过只有你的用户才能打开的 Unix 
 ## 快速开始
 
 ```sh
-# 1. The mod, from this repository's marketplace
+# 1. The app, from LiveBridge's own Homebrew tap
+brew install --cask getlivebridge/tap/livebridge
+
+# 2. The mod, from this repository's marketplace
 claude plugin marketplace add getLiveBridge/LiveBridge
 claude plugin install livebridge@livebridge
-
-# 2. The app, built from source, installed in /Applications and opened
-git clone https://github.com/getLiveBridge/LiveBridge.git
-cd livebridge
-scripts/build-app.sh --release
 ```
 
-3. 在你想与之对话的 Claude Code 会话中，输入 `/live`。
-4. 点击提示输入框上方状态条中的 **Start**，允许使用麦克风，然后开始说话。
+3. 从“应用程序”中打开 LiveBridge。首次打开时，macOS 会询问是否打开从互联网下载的应用；点击 **Open**。LiveBridge 在菜单栏中运行。
+4. 在你想与之对话的 Claude Code 会话中输入 `/live`。它会回答 “Joined LiveBridge.”，提示输入框上方会出现状态条：**Voice off**、通话所对应的会话，以及 **Start**。
+5. 点击 **Start**。首次使用时，macOS 会请求麦克风权限：请允许。它还可能询问 LiveBridge 能否查找本地网络上的设备；语音线路也需要这项权限。状态条随后显示 **Listening**：你 Mac 上的语音检测器在等你开口，此时还没有发送任何内容。
+6. 问一句“这个会话在做什么？”。状态条先显示 **Connecting**，再显示 **Live**，语音会根据会话的对话作答，或把问题交给 Claude。请它做一项修改，语音会把它交给 Claude，并在 Claude 完成后告诉你结果。谈话安静下来后，线路关闭，状态条重新显示 **Listening**（[何时关闭](#按需计费的设计)）。
 
-不想自己构建？每个[发布版本](https://github.com/getLiveBridge/LiveBridge/releases/latest)都附有磁盘映像形式的应用，
-由 GitHub Actions 构建并出具证明；[通过磁盘映像安装](#通过磁盘映像安装)说明了如何验证并打开它。无论哪种方式，模组的安装方法都相同。
+没有 Homebrew？每个[发布版本](https://github.com/getLiveBridge/LiveBridge/releases/latest)都附有由 GitHub Actions 构建并出具证明的磁盘映像形式的应用（[通过磁盘映像安装](#通过磁盘映像安装)），你也可以自行构建（[从源码构建](#从源码构建)）。无论哪种方式，模组的安装方法都相同。
 
-如果在已经打开的会话中找不到 `/live`，请重新打开该会话（[原因](#已知限制)）。更新、权限、重新构建后保留麦克风权限以及卸载，见[安装](#安装)。
+如果在已经打开的会话中找不到 `/live`，请重新打开该会话（[原因](#已知限制)）。磁盘映像、从源码构建和权限见[安装](#安装)；其余内容见[更新应用](#更新应用)、[卸载](#卸载)和[使用](#使用)。
 
 ## 系统要求
 

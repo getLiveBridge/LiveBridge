@@ -66,27 +66,36 @@ codex और आपके अपने Claude Code के बीच एक bridg
 ## त्वरित शुरुआत
 
 ```sh
-# 1. The mod, from this repository's marketplace
+# 1. The app, from LiveBridge's own Homebrew tap
+brew install --cask getlivebridge/tap/livebridge
+
+# 2. The mod, from this repository's marketplace
 claude plugin marketplace add getLiveBridge/LiveBridge
 claude plugin install livebridge@livebridge
-
-# 2. The app, built from source, installed in /Applications and opened
-git clone https://github.com/getLiveBridge/LiveBridge.git
-cd livebridge
-scripts/build-app.sh --release
 ```
 
-3. जिस Claude Code session से बात करनी है, उसमें `/live` टाइप करें।
-4. prompt के ऊपर वाले band में **Start** दबाएँ, microphone की अनुमति दें, और बोलें।
+3. Applications से LiveBridge खोलें। पहली बार macOS पूछता है कि internet से download किया गया app
+   खोलें या नहीं; **Open** पर click करें। LiveBridge menu bar में चलता है।
+4. जिस Claude Code session से बात करनी है, उसमें `/live` टाइप करें। वह "Joined LiveBridge." जवाब
+   देता है, और prompt के ऊपर एक band दिखता है: **Voice off**, वह session जिससे call बात करती है, और
+   **Start**।
+5. **Start** दबाएँ। पहली बार macOS microphone की अनुमति माँगता है: अनुमति दें। वह यह भी पूछ सकता है
+   कि क्या LiveBridge आपके local network पर devices ढूँढ सकता है; voice line को यह भी चाहिए। अब band
+   **Listening** दिखाता है: आपके Mac पर एक voice detector आपके बोलने का इंतज़ार करता है, और अभी कुछ
+   नहीं भेजा जाता।
+6. पूछें "यह session किस पर काम कर रहा है?"। band **Connecting** और फिर **Live** दिखाता है, और voice
+   जवाब देता है, session की बातचीत से या सवाल Claude को सौंपकर। कोई बदलाव माँगें, तो voice उसे Claude
+   को सौंपता है और Claude का काम पूरा होने पर नतीजा बताता है। बातचीत शांत होने पर line बंद हो जाती है
+   और band फिर **Listening** दिखाता है ([कब](#बिलिंग-का-ध्यान-रखने-वाला-डिज़ाइन))।
 
-खुद build नहीं करना चाहते? हर [release](https://github.com/getLiveBridge/LiveBridge/releases/latest)
-में app एक disk image के रूप में मिलता है, जिसे GitHub Actions ने build और attest किया है;
-उसे कैसे जाँचें और खोलें, यह [डिस्क इमेज से](#डिस्क-इमेज-से) में है। mod दोनों तरीकों में एक ही
-तरह install होता है।
+Homebrew नहीं है? हर [release](https://github.com/getLiveBridge/LiveBridge/releases/latest) में app
+एक disk image के रूप में मिलता है, जिसे GitHub Actions ने build और attest किया है
+([डिस्क इमेज से](#डिस्क-इमेज-से)), या उसे खुद build करें ([सोर्स से](#सोर्स-से))। mod हर तरीके में
+एक ही तरह install होता है।
 
 अगर पहले से खुले session में `/live` नहीं मिलता, तो session दोबारा खोलें ([क्यों](#ज्ञात-सीमाएँ))।
-Update, अनुमतियाँ, नए build के बाद भी microphone की अनुमति बनाए रखना और uninstall करना
-[इंस्टॉल करना](#इंस्टॉल-करना) में हैं।
+disk image, सोर्स से build और अनुमतियाँ [इंस्टॉल करना](#इंस्टॉल-करना) में हैं; बाकी
+[अपडेट करना](#अपडेट-करना), [अनइंस्टॉल करना](#अनइंस्टॉल-करना) और [उपयोग](#उपयोग) में।
 
 ## आवश्यकताएँ
 

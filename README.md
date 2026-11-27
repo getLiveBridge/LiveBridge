@@ -99,12 +99,20 @@ claude plugin marketplace add getLiveBridge/LiveBridge
 claude plugin install livebridge@livebridge
 ```
 
-3. Open LiveBridge. Releases after 0.4.2 are notarized: the first time, macOS asks whether to
-   open an app downloaded from the internet; click **Open**. 0.4.2 and earlier are not, so
-   macOS blocks the first launch until you allow it under System Settings > Privacy & Security >
-   **Open Anyway**.
-4. In the Claude Code session you want to talk to, type `/live`.
-5. Press **Start** in the band above the prompt, allow the microphone, and talk.
+3. Open LiveBridge from Applications. The first time, macOS asks whether to open an app
+   downloaded from the internet; click **Open**. LiveBridge runs in the menu bar.
+4. In the Claude Code session you want to talk to, type `/live`. It answers "Joined LiveBridge.",
+   and a band appears above the prompt with **Voice off**, the session the call talks to, and
+   **Start**.
+5. Press **Start**. The first time, macOS asks for the microphone: allow it. It may also ask
+   whether LiveBridge may find devices on your local network; the voice line needs that too. The
+   band now reads **Listening**: a voice detector on your Mac waits for you to speak, and nothing is
+   sent yet.
+6. Ask "What is this session working on?". The band shows **Connecting**, then **Live**, and the
+   voice answers, from the session's conversation or by handing the question to Claude. Ask for a
+   change, and the voice hands it to Claude and tells you the result when Claude is done. When the
+   talk goes quiet, the line closes and the band reads **Listening** again
+   ([when](#billing-aware-by-design)).
 
 No Homebrew? Each [release](https://github.com/getLiveBridge/LiveBridge/releases/latest) has
 the app as a disk image, built and attested by GitHub Actions
@@ -112,8 +120,8 @@ the app as a disk image, built and attested by GitHub Actions
 ([From source](#from-source)). The mod is installed the same way whichever you choose.
 
 If `/live` is not found in a session that was already open, reopen the session
-([why](#known-limitations)). Updating, permissions, keeping the microphone permission across
-rebuilds and uninstalling are under [Install](#install).
+([why](#known-limitations)). [Install](#install) covers the disk image, building from source and
+permissions; [Updating](#updating), [Uninstall](#uninstall) and [Use](#use) cover the rest.
 
 ## Requirements
 
