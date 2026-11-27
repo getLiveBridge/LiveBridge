@@ -453,8 +453,10 @@ voice's words:
   and question, `session.context.appended` ran to `end_ms` 3200 after `session.started`.
 - The voice's sound read from the peer's `inbound-rtp` stats in the WKWebView page (`voice.js`, the
   microphone's detector at -45 dB) works: in two smoke runs on 2026-11-27, `voiceStarted` and
-  `voiceEnded` bracketed each of the voice's 6 replies (2.0 to 4.3 s each), each line closed 20.4 s
-  after its last `voiceEnded`, and the 50 s of silence between the lines gave no `voiceStarted`.
+  `voiceEnded` bracketed each of the voice's 6 replies (2.0 to 4.3 s each), and each line closed
+  20.4 s after its last `voiceEnded`, the silence wait, with no `voiceStarted` in that silence while
+  the service went on sending packets. Both lines were opened by speech: a line a result opened, with
+  the owner silent, was not run, and how late the detector hears the voice start was not measured.
 
 ### Claude Code mod API
 
