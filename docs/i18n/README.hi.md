@@ -273,6 +273,10 @@ label लगा होता है; [CONTRIBUTING.md](../../CONTRIBUTING.md#whe
 [help wanted](https://github.com/getLiveBridge/LiveBridge/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)
 issues, [ज्ञात सीमाएँ](#ज्ञात-सीमाएँ) और [ऊपर](#रोडमैप-और-सहयोग-चाहिए) बताई गई दिशाएँ।
 
+आप coding assistants इस्तेमाल कर सकते हैं: pull request में बताएँ कि कौन-से हिस्से किसी tool ने
+generate किए, `scripts/check.sh` चलाएँ, और बदली गई हर line समझाने के लिए तैयार रहें
+([AI-assisted contributions](../../CONTRIBUTING.md#ai-assisted-contributions))।
+
 - [CONTRIBUTING.md](../../CONTRIBUTING.md): layout, toolchain, checks (`scripts/check.sh`) और conventions।
 - [Issue forms](https://github.com/getLiveBridge/LiveBridge/issues/new/choose): bug की रिपोर्ट करें या कोई feature माँगें।
 - [CODE_OF_CONDUCT.md](../../CODE_OF_CONDUCT.md): यहाँ हम एक-दूसरे के साथ कैसे पेश आते हैं।

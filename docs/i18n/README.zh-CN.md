@@ -192,6 +192,8 @@ LiveBridge 只在你点击 **Install** 时更新自身和模组，从不自行�
 [help wanted](https://github.com/getLiveBridge/LiveBridge/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)
 议题、[已知限制](#已知限制)以及[上文](#路线图与欢迎协助)的各个方向。
 
+可以使用编程助手：请在 pull request 中说明哪些部分由工具生成，运行 `scripts/check.sh`，并准备好解释每一行改动（[AI 辅助贡献](../../CONTRIBUTING.md#ai-assisted-contributions)）。
+
 - [CONTRIBUTING.md](../../CONTRIBUTING.md)：目录布局、工具链、检查（`scripts/check.sh`）和约定。
 - [议题表单](https://github.com/getLiveBridge/LiveBridge/issues/new/choose)：报告缺陷或提出功能请求。
 - [CODE_OF_CONDUCT.md](../../CODE_OF_CONDUCT.md)：我们在这里如何相互对待。

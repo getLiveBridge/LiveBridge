@@ -282,6 +282,10 @@ OpenAI, и его пределы, что закрывает фильтр учё�
 [help wanted](https://github.com/getLiveBridge/LiveBridge/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22),
 с [известных ограничений](#известные-ограничения) и с направлений [выше](#планы-и-где-нужна-помощь).
 
+Ассистентами для кода пользоваться можно: укажите в pull request, какие части сгенерировал
+инструмент, запустите `scripts/check.sh` и будьте готовы объяснить каждую изменённую строку
+([правило для вкладов с ИИ](../../CONTRIBUTING.md#ai-assisted-contributions)).
+
 - [CONTRIBUTING.md](../../CONTRIBUTING.md): структура репозитория, инструменты, проверки
   (`scripts/check.sh`) и соглашения.
 - [Формы задач](https://github.com/getLiveBridge/LiveBridge/issues/new/choose): сообщите об ошибке или предложите функцию.

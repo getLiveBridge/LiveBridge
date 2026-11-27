@@ -301,6 +301,10 @@ tickets [help wanted](https://github.com/getLiveBridge/LiveBridge/issues?q=is%3A
 les [limitations connues](#limitations-connues) et les directions
 [ci-dessus](#feuille-de-route-et-aide-recherchée).
 
+Vous pouvez utiliser des assistants de code : indiquez dans la pull request quelles parties un
+outil a générées, lancez `scripts/check.sh` et soyez prêt à expliquer chaque ligne modifiée
+([contributions assistées par IA](../../CONTRIBUTING.md#ai-assisted-contributions)).
+
 - [CONTRIBUTING.md](../../CONTRIBUTING.md) : l'organisation du dépôt, la chaîne d'outils, les
   vérifications (`scripts/check.sh`) et les conventions.
 - [Formulaires de tickets](https://github.com/getLiveBridge/LiveBridge/issues/new/choose) : signalez un bug ou demandez une fonctionnalité.

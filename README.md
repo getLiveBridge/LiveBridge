@@ -305,6 +305,10 @@ be agreed before the work starts. Good places to begin are the
 issues, the [known limitations](#known-limitations) and the directions
 [above](#roadmap-and-help-wanted).
 
+You may use coding assistants: say in the pull request which parts a tool generated, run
+`scripts/check.sh`, and be ready to explain every changed line
+([AI-assisted contributions](CONTRIBUTING.md#ai-assisted-contributions)).
+
 - [CONTRIBUTING.md](CONTRIBUTING.md): the layout, the toolchain, the checks (`scripts/check.sh`)
   and the conventions.
 - [Issue forms](https://github.com/getLiveBridge/LiveBridge/issues/new/choose): report a bug or ask for a feature.

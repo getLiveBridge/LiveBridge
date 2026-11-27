@@ -293,6 +293,10 @@ son las incidencias
 las [limitaciones conocidas](#limitaciones-conocidas) y las direcciones de la
 [hoja de ruta](#hoja-de-ruta-y-ayuda-buscada) anterior.
 
+Puedes usar asistentes de programación: indica en la pull request qué partes generó una
+herramienta, ejecuta `scripts/check.sh` y prepárate para explicar cada línea cambiada
+([contribuciones asistidas por IA](../../CONTRIBUTING.md#ai-assisted-contributions)).
+
 - [CONTRIBUTING.md](../../CONTRIBUTING.md): la estructura, la toolchain, las comprobaciones
   (`scripts/check.sh`) y las convenciones.
 - [Formularios de incidencias](https://github.com/getLiveBridge/LiveBridge/issues/new/choose): informa de un error o pide una función.
