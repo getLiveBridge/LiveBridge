@@ -34,10 +34,12 @@ The voice also follows what you type in the session and what Claude
 answers, so you can switch between speaking and typing.
 
 **A conversation, not dictation.** GPT-Live listens while it talks: cut in and it stops and hears you
-out, think out loud and it can drop in a quick "mm-hmm". **You stop paying for silence:** OpenAI
-prices voice by the minute, so after a stretch of quiet you set in [Settings](docs/guide.md#settings) the line
-closes, and it opens again when you speak, with the conversation where you left it
-([Billing](#billing-aware-by-design)).
+out, think out loud and it can drop in a quick "mm-hmm". **The line closes when the talk goes
+quiet:** OpenAI prices voice by the minute, so after a stretch of silence you set in
+[Settings](docs/guide.md#settings) (20 seconds by default) the line closes, and it opens again
+when you speak, with the conversation where you left it. The silence before it closes is billed,
+and so is the wait of up to 2 minutes for Claude's answer after a handoff; **Mute** does not close
+the line, so it saves no minutes ([Billing](#billing-aware-by-design)).
 
 - **Claude's turns go to the work.** Ask "what did you mean?" or "what is the risk with B?" and
   the voice is told to answer it from the conversation it shares with the session, so the

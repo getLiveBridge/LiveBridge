@@ -37,7 +37,7 @@ responde Claude, así que puedes alternar entre hablar y escribir.
 
 *El texto en inglés es el canónico ([README.md](../../README.md)); esta traducción puede ir por detrás.*
 
-**Una conversación, no un dictado.** GPT-Live escucha mientras habla: interrúmpelo y se detiene para oírte; piensa en voz alta y puede soltar un breve «ajá». **Dejas de pagar por el silencio:** OpenAI cobra la voz por minuto, así que tras un rato de silencio que fijas en [Ajustes](guide.es.md#ajustes) la línea se cierra y se abre de nuevo cuando hablas, con la conversación donde la dejaste ([Facturación](#facturación-bajo-control-por-diseño)).
+**Una conversación, no un dictado.** GPT-Live escucha mientras habla: interrúmpelo y se detiene para oírte; piensa en voz alta y puede soltar un breve «ajá». **La línea se cierra cuando la conversación se calla:** OpenAI cobra la voz por minuto, así que tras un rato de silencio que fijas en [Ajustes](guide.es.md#ajustes) (20 segundos por defecto) la línea se cierra y se abre de nuevo cuando hablas, con la conversación donde la dejaste. El silencio antes del cierre se cobra, igual que la espera de hasta 2 minutos a la respuesta de Claude tras un traspaso; **Mute** no cierra la línea, así que no ahorra minutos ([Facturación](#facturación-bajo-control-por-diseño)).
 
 <p align="center"><img src="../assets/readme-demo.gif" alt="Hablando con una sesión de Claude Code a través de LiveBridge" width="100%"></p>
 

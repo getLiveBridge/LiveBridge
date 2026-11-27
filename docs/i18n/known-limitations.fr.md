@@ -36,7 +36,9 @@ les réglages nommés ici.
   va moins loin ([détails](../../SECURITY.md#what-session-text-can-do)).
 - Un résultat qui arrive pendant que la ligne l'attend est transmis à la voix sous forme de texte à
   dire ; codex n'a aucun appel qui fasse parler la voix immédiatement, c'est donc le modèle qui
-  décide du moment. Lors des tests, elle a parlé en quelques secondes. Si ce n'est pas le cas, le
+  décide du moment. Le test de bout en bout ([scripts/smoke.sh](../../scripts/smoke.sh)) vérifie que
+  la voix dit un tel résultat avant vos prochains mots ; le temps qu'elle met à parler n'a pas été
+  mesuré. Si ce n'est pas le cas, le
   résultat reste non entendu : il repasse à la voix avec vos prochains mots, ou un carillon retentit
   à la fermeture de la ligne.
 - Quand la réponse de Claude rouvre la ligne, la voix peut rester muette : c'est arrivé dans 4 des

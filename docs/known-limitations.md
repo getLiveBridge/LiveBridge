@@ -32,9 +32,10 @@ settings named here.
   no gap is marked, the menu says **Context up to date**, and the pause reaches less
   ([details](../SECURITY.md#what-session-text-can-do)).
 - A result that arrives while the line waits for it goes to the voice as text to say; codex has no
-  call that makes the voice speak at once, so the model decides when. In testing it spoke within a
-  few seconds. If it does not, the result stays unheard: it goes to the voice again with your next
-  words, or it chimes when the line closes.
+  call that makes the voice speak at once, so the model decides when. The end-to-end smoke test
+  ([scripts/smoke.sh](../scripts/smoke.sh)) checks that the voice says such a result before your
+  next words; how soon it speaks was not measured. If it does not say it, the result stays unheard:
+  it goes to the voice again with your next words, or it chimes when the line closes.
 - When Claude's answer opens the line again, the voice can stay silent: it did in 4 of 14 measured
   runs, a small sample ([ADR 0001 (n)](adr/0001-platform-findings.md)). The line then closes
   once its wait for a first word ends ([Settings](guide.md#settings)), and the answer chimes and waits, as

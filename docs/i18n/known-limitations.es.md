@@ -35,8 +35,10 @@ ajustes que se nombran aquí.
   allí se registra, no se marca ningún hueco, el menú dice **Context up to date** y la pausa alcanza
   menos ([detalles](../../SECURITY.md#what-session-text-can-do)).
 - Un resultado que llega mientras la línea lo espera pasa a la voz como texto para decir; codex no
-  tiene ninguna llamada que haga hablar a la voz de inmediato, así que el modelo decide cuándo. En
-  las pruebas habló en pocos segundos. Si no lo hace, el resultado queda sin escuchar: vuelve a
+  tiene ninguna llamada que haga hablar a la voz de inmediato, así que el modelo decide cuándo. La
+  prueba de humo de extremo a extremo ([scripts/smoke.sh](../../scripts/smoke.sh)) comprueba que la
+  voz dice ese resultado antes de tus siguientes palabras; no se midió cuánto tarda en hablar. Si no
+  lo hace, el resultado queda sin escuchar: vuelve a
   pasar a la voz con tus siguientes palabras, o suena un timbre cuando se cierra la línea.
 - Cuando la respuesta de Claude vuelve a abrir la línea, la voz puede quedarse callada: ocurrió en 4
   de 14 ejecuciones medidas, una muestra pequeña ([ADR 0001

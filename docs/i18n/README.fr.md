@@ -37,7 +37,7 @@ dans la session et ce que Claude répond, vous pouvez donc passer de la parole a
 
 *Le texte anglais fait foi ([README.md](../../README.md)) ; cette traduction peut avoir du retard.*
 
-**Une conversation, pas une dictée.** GPT-Live écoute pendant qu'il parle : coupez-le et il s'arrête pour vous écouter ; pensez à voix haute et il peut glisser un petit « mm-hmm ». **Vous cessez de payer le silence :** OpenAI facture la voix à la minute, donc après un temps de silence que vous réglez dans [Settings](guide.fr.md#réglages) la ligne se ferme et se rouvre dès que vous parlez, la conversation reprenant là où vous l'aviez laissée ([Facturation](#facturation-maîtrisée-par-conception)).
+**Une conversation, pas une dictée.** GPT-Live écoute pendant qu'il parle : coupez-le et il s'arrête pour vous écouter ; réfléchissez à voix haute et il peut glisser un petit « mm-hmm ». **La ligne se ferme quand la conversation se tait :** OpenAI facture la voix à la minute, donc après un silence dont vous fixez la durée dans [Settings](guide.fr.md#réglages) (20 secondes par défaut), la ligne se ferme, et elle se rouvre quand vous parlez, la conversation reprenant là où vous l'aviez laissée. Le silence avant la fermeture est facturé, tout comme l'attente, jusqu'à 2 minutes, de la réponse de Claude après une transmission ; **Mute** ne ferme pas la ligne et n'économise donc aucune minute ([Facturation](#facturation-maîtrisée-par-conception)).
 
 <p align="center"><img src="../assets/readme-demo.gif" alt="Conversation avec une session Claude Code via LiveBridge" width="100%"></p>
 
