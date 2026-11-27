@@ -186,6 +186,12 @@ final class AppModel {
       audio.onLevel = { [weak self] in self?.showLevel($0) }
       Task {
         for await event in events {
+          // the voice's sound, read from its track's stats, is what keeps a line open while it
+          // speaks; its times in the log show the reading works (`log show`, category `call`)
+          if event == .voiceStarted || event == .voiceEnded {
+            let sound = event == .voiceStarted ? "started" : "ended"
+            Self.log.info("voice sound \(sound, privacy: .public)")
+          }
           // `.speechStarted` stays suspended while its line opens, and a refusal is about that line
           if case .lineError = event {
             Task { await bridge.audioEvent(event) }

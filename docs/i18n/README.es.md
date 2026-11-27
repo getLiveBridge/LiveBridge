@@ -371,7 +371,7 @@ depuración:
 **Line** reúne cuánto sigue abierta la línea en silencio y cómo se conecta:
 
 - **Silence before the line closes** (20 segundos por defecto), **Wait for a first word on a line
-  a result opened** (5 segundos) y **Sound without words before the line closes** (90 segundos):
+  a result opened** (10 segundos) y **Sound without words before the line closes** (90 segundos):
   cuánto tiempo mantiene abierta la línea cada tipo de silencio, de 0 a 300 segundos. 0 desactiva
   el silencio o el sonido sin palabras, y una espera de primera palabra en 0 dura lo mismo que el
   silencio. Con los tres en 0, el silencio nunca cierra la línea: sigue abierta, facturada todo ese

@@ -6,7 +6,7 @@ prose above the trail marker.
 
 ## Now
 
-0.6.4 is out: a long spoken request reaches Claude whole. See the
+0.6.5 is out: a result that opens the line is said to the end. See the
 [changelog](../CHANGELOG.md) for the release history. A short demo recording is next.
 
 ## Next

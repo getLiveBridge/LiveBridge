@@ -4,6 +4,22 @@ All notable changes to this project are listed here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow
 [Semantic Versioning](https://semver.org/).
 
+## [0.6.5]
+
+### Fixed
+
+- A result that opens the line is said to the end. The line knew the voice was speaking only from
+  its text, which GPT-Live-1.1 sends about 12 seconds after it starts to speak, so a line a result
+  opened closed at the first-word wait with the voice in mid-sentence and the result left
+  unheard. The audio page now hears the voice's own sound: while it plays, the line stays open (up
+  to the wait for sound without words) and a held result waits for it to stop.
+
+### Changed
+
+- **Wait for a first word on a line a result opened** is 10 seconds by default, up from 5: the
+  voice starts only once it has read what the line was given, which takes longer for a long
+  result. A value you saved in Settings stays as it is.
+
 ## [0.6.4]
 
 ### Fixed
