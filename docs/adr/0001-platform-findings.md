@@ -136,7 +136,12 @@ reset times in a panel that ignores the mouse
   (fixture `realtime-item-added-handoff-request.json`): `handoff_id` and `item_id` (the same
   `item_…` id), `input_transcript` (a string: the voice model's delegation text) and
   `active_transcript` (an array of `{role, text}`: on 0.166.0 it holds the user's turn, it is not
-  empty). In every run the delegation text was close to the user's own words; how much the
+  empty). It is not all the speech since the last handoff: on `v3`, at each `turn.done` where the
+  pending lines exceed 4 KiB (`RealtimeDelegation::FIELD_BYTES`), codex moves the finished ones into
+  its thread's history and out of the next `active_transcript` (0.172.0,
+  `realtime_websocket/methods.rs`, `take_completed_transcript`). Observed on 2026-11-27: after an
+  owner's line of some 600 Cyrillic characters, the handoff carried only the voice's "Угу." and the
+  owner's last few words. In every run the delegation text was close to the user's own words; how much the
   model rewrites it depends on the prompt. Speech-recognition errors pass straight through (one
   run recognised the first words in the wrong language). The data channel sees the same event as
   `delegation.created` (`handoff_id: "handoff_1"`, `target: "client"`).
@@ -606,7 +611,8 @@ band in the terminal.
 ### Codex
 
 - A `handoff_request` item becomes a voice request: `brief` from `input_transcript`, `transcript`
-  from `active_transcript` (`[{role, text}]`), de-duplicated by `handoff_id`.
+  from the lines the app heard since the last request (`HandoffSpeech`), not from
+  `active_transcript`, which loses lines past 4 KiB (finding (b)); de-duplicated by `handoff_id`.
 - We will start every realtime session with `version: "v3"`, `outputModality: "audio"`,
   `includeStartupContext: false`, `clientManagedHandoffs: true`, `delegationAckFiller: true`
   (the silence rule waits for that acknowledgement), and `initialItems` for continuity.
