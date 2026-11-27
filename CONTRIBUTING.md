@@ -3,8 +3,9 @@
 Thanks for helping. Issues and pull requests are welcome; for anything larger than a fix, open
 an issue first so we can agree on the shape. The issue forms ask for what a report needs (your
 macOS, LiveBridge commit, Claude Code and codex versions, and what the band or menu showed), and
-the pull request template asks what changed, why, how you tested it, and whether
-`scripts/check.sh` passed. Report a vulnerability privately, as [SECURITY.md](SECURITY.md)
+the pull request template asks what changed, why, how you tested it, whether
+`scripts/check.sh` passed, and which parts a tool generated
+([AI-assisted contributions](#ai-assisted-contributions)). Report a vulnerability privately, as [SECURITY.md](SECURITY.md)
 says, not in an issue. Everyone taking part follows the [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## Layout
@@ -250,6 +251,14 @@ one before, and ignore a line's first row, where concealment is only start-up.
 - Commits follow [Conventional Commits](https://www.conventionalcommits.org/) (`feat`, `fix`,
   `docs`, `test`, `build`, `chore`, …), one logical change each.
 - Write for a reader who has not seen the code: short sentences, the reason before the detail.
+
+## AI-assisted contributions
+
+You may use coding assistants. In the pull request, say which parts a tool generated, and
+confirm that you ran `scripts/check.sh`, read every changed line and can explain each of them.
+Pull requests whose authors cannot answer a reviewer's question about their own code are closed.
+Issues and comments must be written or checked by their author: do not paste model output you
+have not reviewed.
 
 ## stayfixed
 

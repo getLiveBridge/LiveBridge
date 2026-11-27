@@ -13,3 +13,5 @@
 - [ ] The docs that describe this behaviour changed in the same pull request.
 - [ ] A wire change touches `Wire.swift`, `plugin/hooks/wire.ts` and `wire/fixtures/` together.
 - [ ] No personal data in code, fixtures, logs or screenshots.
+- [ ] If a coding assistant generated any of this, the description says which parts; I read every
+      changed line and can explain it (CONTRIBUTING.md, "AI-assisted contributions").
