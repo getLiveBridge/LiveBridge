@@ -78,15 +78,17 @@ Free and open source under the [MIT license](LICENSE). The voice runs on your Ch
 there is no API key and no separate bill: its minutes come out of your plan's
 Codex usage ([Billing](#billing-aware-by-design)).
 
-> **Unofficial.** Not affiliated with, endorsed by or supported by Anthropic or OpenAI. It relies
-> on codex's experimental realtime API, which can change with any codex release.
+> **Status:** 0.x, one maintainer. **Unofficial:** not affiliated with, endorsed by or supported by
+> Anthropic or OpenAI. LiveBridge uses codex's experimental realtime API on your ChatGPT login,
+> which OpenAI does not document as a path for third-party apps, and a codex release can break it.
+> Use it at your own risk.
+>
+> **Needs:** Apple Silicon with macOS 14 or later, Claude Code 2.1.301 or later, and
+> [codex](https://github.com/openai/codex) signed in (`codex login`) to a ChatGPT plan whose Codex
+> includes voice; the voice's minutes count against that plan. Building the app yourself also needs
+> Xcode with Swift 6.0 or later. The details are under [Requirements](#requirements).
 
 ## Quick start
-
-You need macOS 14+ on Apple Silicon, Claude Code 2.1.301+, and
-[codex](https://github.com/openai/codex) signed in (`codex login`) to a ChatGPT plan whose Codex
-includes voice; to build the app yourself, also Xcode with Swift 6.0+. The details are under
-[Requirements](#requirements).
 
 ```sh
 # 1. The app, from LiveBridge's own Homebrew tap

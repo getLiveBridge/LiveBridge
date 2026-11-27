@@ -53,15 +53,17 @@ codex और आपके अपने Claude Code के बीच एक bridg
 लिखा है कि OpenAI तक क्या पहुँचता है, और GitHub को भेजे जाने वाले app के requests के नाम भी वहीं
 हैं; [SECURITY.md](../../SECURITY.md) बताता है कि यह किस चीज़ से बचाता है और किस चीज़ से नहीं।
 
-> **अनौपचारिक।** इसका Anthropic या OpenAI से कोई संबंध नहीं है, और न ही उनका समर्थन या सपोर्ट
-> इसे हासिल है। यह codex के experimental realtime API पर निर्भर है, जो codex के किसी भी release
-> के साथ बदल सकता है।
+> **स्थिति:** 0.x, एक maintainer। **अनौपचारिक:** Anthropic या OpenAI से संबद्ध नहीं, न उनके द्वारा
+> समर्थित या endorsed। LiveBridge आपके ChatGPT login पर codex का experimental realtime API इस्तेमाल
+> करता है, जिसे OpenAI third-party apps के रास्ते के रूप में document नहीं करता, और codex का कोई
+> release इसे तोड़ सकता है। इसे अपने जोखिम पर इस्तेमाल करें।
+>
+> **ज़रूरी:** Apple Silicon पर macOS 14 या नया, Claude Code 2.1.301 या नया, और
+> [codex](https://github.com/openai/codex), जिसमें `codex login` से ऐसे ChatGPT plan पर sign in किया
+> गया हो जिसके Codex में voice शामिल है; voice के मिनट उसी plan से कटते हैं। app को खुद build करने के
+> लिए Swift 6.0 या नए वाला Xcode भी। विवरण [आवश्यकताएँ](#आवश्यकताएँ) में हैं।
 
 ## त्वरित शुरुआत
-
-आपको चाहिए: Apple Silicon पर macOS 14+, Claude Code 2.1.301+, और [codex](https://github.com/openai/codex),
-जिसमें `codex login` से ऐसे ChatGPT plan पर sign in किया गया हो जिसके Codex में voice शामिल है;
-app को खुद build करने के लिए Swift 6.0+ वाला Xcode भी। विवरण [आवश्यकताएँ](#आवश्यकताएँ) में हैं।
 
 ```sh
 # 1. The mod, from this repository's marketplace

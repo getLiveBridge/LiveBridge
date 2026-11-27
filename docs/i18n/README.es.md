@@ -55,15 +55,17 @@ la descarga, su verificación y la actualización del mod. [Privacidad](#privaci
 exactamente qué llega a OpenAI y nombra las peticiones de la aplicación a GitHub;
 [SECURITY.md](../../SECURITY.md) explica de qué protege y de qué no protege.
 
-> **No oficial.** Sin afiliación, respaldo ni soporte de Anthropic u OpenAI. Depende de la API
-> experimental de tiempo real de codex, que puede cambiar con cualquier versión de codex.
+> **Estado:** 0.x, un solo mantenedor. **No oficial:** sin afiliación, respaldo ni soporte de
+> Anthropic u OpenAI. LiveBridge usa la API experimental de tiempo real de codex con tu inicio de
+> sesión de ChatGPT, que OpenAI no documenta como vía para aplicaciones de terceros, y una versión de
+> codex puede romperlo. Úsalo bajo tu propia responsabilidad.
+>
+> **Necesitas:** Apple Silicon con macOS 14 o posterior, Claude Code 2.1.301 o posterior y
+> [codex](https://github.com/openai/codex) con sesión iniciada (`codex login`) en un plan de ChatGPT
+> cuyo Codex incluya voz; los minutos de voz se descuentan de ese plan. Para compilar la aplicación
+> tú mismo, también Xcode con Swift 6.0 o posterior. Los detalles están en [Requisitos](#requisitos).
 
 ## Inicio rápido
-
-Necesitas macOS 14+ en Apple Silicon, Claude Code 2.1.301+ y [codex](https://github.com/openai/codex)
-con sesión iniciada (`codex login`) en un plan de ChatGPT cuyo Codex incluya voz; para compilar la
-aplicación tú mismo, también Xcode con Swift 6.0+. Los detalles están en
-[Requisitos](#requisitos).
 
 ```sh
 # 1. The mod, from this repository's marketplace

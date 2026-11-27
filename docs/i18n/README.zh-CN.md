@@ -44,14 +44,15 @@ Claude Code。应用与模组之间通过只有你的用户才能打开的 Unix 
 你点击 **Check for update** 时的同一检查；通知新版本时的 `gh auth status`；以及你点击 **Install** 时的下载、验证和模组更新。
 [隐私](#隐私)准确列出了哪些内容会到达 OpenAI，并列出应用向 GitHub 发出的请求；[SECURITY.md](../../SECURITY.md) 说明了它能防范什么、不能防范什么。
 
-> **非官方项目。** 与 Anthropic 或 OpenAI 无任何隶属、认可或支持关系。它依赖 codex 的实验性实时 API，该 API
-> 可能随任何一次 codex 发布而变化。
+> **状态：** 0.x，一位维护者。**非官方项目：** 与 Anthropic 或 OpenAI 无任何隶属、认可或支持关系。LiveBridge
+> 在你的 ChatGPT 登录上使用 codex 的实验性实时 API，OpenAI 并未将其作为第三方应用的途径写入文档，任何一次 codex
+> 发布都可能使它失效。使用风险由你自行承担。
+>
+> **需要：** Apple Silicon 上的 macOS 14 或更高版本、Claude Code 2.1.301 或更高版本，以及已登录（`codex login`）到其
+> Codex 包含语音的 ChatGPT 套餐的 [codex](https://github.com/openai/codex)；语音分钟数计入该套餐。若要自行构建应用，还需要带
+> Swift 6.0 或更高版本的 Xcode。详情见[系统要求](#系统要求)。
 
 ## 快速开始
-
-你需要 Apple Silicon 上的 macOS 14+、Claude Code 2.1.301+，以及已登录（`codex login`）到其 Codex 包含语音的 ChatGPT 套餐的
-[codex](https://github.com/openai/codex)；若要自行构建应用，还需要带 Swift 6.0+ 的 Xcode。详情见
-[系统要求](#系统要求)。
 
 ```sh
 # 1. The mod, from this repository's marketplace
