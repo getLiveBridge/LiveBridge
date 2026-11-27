@@ -304,7 +304,7 @@ struct RealtimeSessionTests {
     }
     // The mod accepts only UUID request ids; codex's `item_…` id only de-duplicates.
     #expect(request.id.rawValue.wholeMatch(of: /[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}/) != nil)
-    #expect(request.brief == words && request.transcript == [Utterance(role: .user, text: words)])
+    #expect(request.brief == words && request.transcript.isEmpty)
     #expect(await events.next() == .assistantUtterance("I'm pulling up the folder now."))
   }
 

@@ -55,6 +55,8 @@ public actor Bridge: Router {
   private var summaries = SummaryAsks()
   /// What the open line is still saying, which belongs to `lineSession`.
   private var growing = GrowingLines()
+  /// The call's speech since the last request, which the next request carries.
+  private var speech = HandoffSpeech()
   /// The session whose conversation the line last opened with; its transcripts are kept there.
   private var lineSession: SessionID?
   /// Whether `lineSession` is set for the line opening now; until then a target change cannot
@@ -203,6 +205,7 @@ public actor Bridge: Router {
     }
     guard !Task.isCancelled else { return }
     callStart = time.now
+    speech = HandoffSpeech()
     summaries.callStartedOrStopped()
     callTarget = nil  // so the call's first `changed()` asks the target ahead of its line
     await send(.start)
@@ -436,6 +439,7 @@ public actor Bridge: Router {
       // A Stop, a new target or another reconnect may have come during the close.
       guard machine.phase == .connecting, connecting == nil else { return }
       growing = GrowingLines()  // no final text comes for what the closed line said
+      speech.lineClosed()
       await startOpening(preroll: preroll, waits: false)
     case .closeRealtime: await closeLine()
     case .startLocalVAD:
@@ -674,6 +678,8 @@ public actor Bridge: Router {
       // While muted the owner cannot speak: a handoff then is the voice's own, made from the
       // lines it was given, which it reads as the owner's (ADR 0001 (b)). It reaches no session.
       let isMuted = machine.isMuted
+      var request = request
+      if !isMuted { request.transcript = speech.handOff(with: growing.lines) }
       let session = isMuted ? nil : await route(request)
       await send(.handedOff(session))
       if session == nil {
@@ -686,6 +692,7 @@ public actor Bridge: Router {
     case .userSpeaking(let words): growing.add(words, from: .owner)
     case .userUtterance(let text):
       growing.finish(.owner, with: text)
+      speech.finish(.owner, with: text)
       record(.owner, text, in: lineSession)
       await send(.userTranscribed)
     case .assistantSpeaking(let words):
@@ -693,6 +700,7 @@ public actor Bridge: Router {
       await send(.assistantSpeaking)
     case .assistantUtterance(let text):
       growing.finish(.voice, with: text)
+      speech.finish(.voice, with: text)
       record(.voice, text, in: lineSession)
       await send(.assistantFinishedSpeaking(text))
     case .closed(let reason):
@@ -998,7 +1006,10 @@ public actor Bridge: Router {
     wakeWaiter()  // a waiting line looks again
     await withdrawQuestionsOfDroppedSessions()
     await followTarget()
-    if !isLineOpen { growing = GrowingLines() }  // no final text comes for what a closed line said
+    if !isLineOpen {  // no final text comes for what a closed line said
+      growing = GrowingLines()
+      speech.lineClosed()
+    }
     changes += 1
     let mine = changes
     let update = await current

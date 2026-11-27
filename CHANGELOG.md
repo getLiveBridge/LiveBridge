@@ -4,6 +4,16 @@ All notable changes to this project are listed here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow
 [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Fixed
+
+- A long request now reaches Claude whole. Past about 4 KB of speech since the last request
+  (about 2,000 characters of Russian or 4,000 of English), codex moved the finished
+  lines out of the transcript it hands on, so Claude got the voice's brief and only the last
+  words you said. The app now quotes every line it heard since the last request, the one you
+  are still saying included, and a line handed on midway is not quoted again with the next.
+
 ## [0.6.3]
 
 ### Changed

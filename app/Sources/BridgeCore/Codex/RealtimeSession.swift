@@ -326,22 +326,18 @@ public actor RealtimeSession: RealtimeControlling {
     }
   }
 
-  /// A `handoff_request` item: `input_transcript` is the brief, `active_transcript` the speech.
-  /// The request gets a fresh UUID (the id the mod accepts); `handoff_id` only de-duplicates.
+  /// A `handoff_request` item: `input_transcript` is the brief. Its `active_transcript` is not
+  /// read, as codex leaves finished lines out of it; `Bridge` adds the speech it heard itself
+  /// (`HandoffSpeech`). The request gets a fresh UUID (the id the mod accepts); `handoff_id` only
+  /// de-duplicates.
   private func handoff(_ item: JSONValue) {
     guard item["type"] == "handoff_request", let id = item["handoff_id"]?.string,
       handoffs.insert(id).inserted
     else { return }
-    let transcript = (item["active_transcript"]?.array ?? []).compactMap { line in
-      line["text"]?.string.map {
-        Utterance(role: line["role"] == "assistant" ? .assistant : .user, text: $0)
-      }
-    }
     emit.yield(
       .handoff(
         VoiceRequest(
           id: RequestID(rawValue: UUID().uuidString.lowercased()),
-          brief: item["input_transcript"]?.string ?? "",
-          transcript: transcript)))
+          brief: item["input_transcript"]?.string ?? "", transcript: [])))
   }
 }
