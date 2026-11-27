@@ -240,8 +240,8 @@ each measured item. In short:
 - **Where an organization manages Claude Code**, nothing in LiveBridge tells you that a permission
   prompt is waiting, and some managed settings keep the mod from loading.
 - **`/live`** may need the session reopened if the session was open before the mod loaded.
-- **Connect over TCP** prefers TCP but does not force it, and nothing shows which transport a line
-  took.
+- **Connect over TCP** prefers TCP but does not force it, and nothing shows during a call which
+  transport a line took; debug mode records it (`onTcp`).
 - Whether the voice has said a waiting result is judged by its words, in English and Russian only.
   The full list also covers prompts that were not typed, providers without the summary model, and
   sessions still on an older mod.

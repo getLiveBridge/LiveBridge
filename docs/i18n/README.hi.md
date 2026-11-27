@@ -210,8 +210,8 @@ network पर devices खोज सकता है। voice line को यह
 - **जहाँ कोई organization Claude Code manage करता है**, वहाँ LiveBridge में कुछ नहीं बताता कि कोई
   permission prompt इंतज़ार कर रहा है, और कुछ managed settings mod को load होने नहीं देतीं।
 - **`/live`** के लिए session दोबारा खोलना पड़ सकता है, अगर वह mod load होने से पहले खुला था।
-- **Connect over TCP** TCP को प्राथमिकता देता है पर उसे ज़बरदस्ती नहीं करता, और कुछ नहीं दिखाता कि
-  line ने कौन-सा transport लिया।
+- **Connect over TCP** TCP को प्राथमिकता देता है पर उसे ज़बरदस्ती नहीं करता, और call के दौरान कुछ
+  नहीं दिखाता कि line ने कौन-सा transport लिया; debug mode उसे दर्ज करता है (`onTcp`)।
 - voice ने इंतज़ार कर रहा नतीजा कह दिया या नहीं, यह उसके शब्दों से आँका जाता है, सिर्फ़ अंग्रेज़ी और
   रूसी में। पूरी सूची में ये भी हैं: जो prompts टाइप नहीं किए गए, summary model के बिना providers, और
   पुराने mod पर चल रहे sessions।

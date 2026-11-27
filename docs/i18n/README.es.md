@@ -222,7 +222,8 @@ cada punto medido. En resumen:
 - **Donde una organización gestiona Claude Code**, nada en LiveBridge te avisa de que espera una
   solicitud de permiso, y algunos ajustes gestionados impiden que el mod se cargue.
 - **`/live`** puede requerir reabrir la sesión si estaba abierta antes de que se cargara el mod.
-- **Connect over TCP** prefiere TCP pero no lo fuerza, y nada muestra qué transporte tomó una línea.
+- **Connect over TCP** prefiere TCP pero no lo fuerza, y nada muestra durante la llamada qué
+  transporte tomó una línea; el modo de depuración lo registra (`onTcp`).
 - Si la voz ya dijo un resultado en espera se juzga por sus palabras, solo en inglés y ruso. La lista
   completa también trata los prompts que no se escribieron, los proveedores sin el modelo de resumen
   y las sesiones que siguen con un mod anterior.
