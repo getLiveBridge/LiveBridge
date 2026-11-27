@@ -103,7 +103,7 @@ struct SettingsStoreTests {
   }
 
   @Test func theLineKeepsTodaysTimersByDefault() {
-    #expect(Settings().timeouts == CallMachine.Timeouts(silence: 20, firstWord: 5, noise: 90))
+    #expect(Settings().timeouts == CallMachine.Timeouts(silence: 20, firstWord: 10, noise: 90))
   }
 
   @Test func theLinesTimersAreKeptAcrossRestarts() throws {

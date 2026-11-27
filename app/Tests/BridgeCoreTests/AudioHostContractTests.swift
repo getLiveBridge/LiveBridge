@@ -8,6 +8,8 @@ struct AudioHostContractTests {
   @Test func pageMessagesDecode() {
     #expect(AudioEvent(body: ["type": "speechStarted"]) == .speechStarted)
     #expect(AudioEvent(body: ["type": "speechEnded"]) == .speechEnded)
+    #expect(AudioEvent(body: ["type": "voiceStarted"]) == .voiceStarted)
+    #expect(AudioEvent(body: ["type": "voiceEnded"]) == .voiceEnded)
     #expect(AudioEvent(body: ["type": "level", "value": 0.25]) == .level(0.25))
     #expect(AudioEvent(body: ["type": "audioFailed", "reason": "r"]) == .failed(.other("r")))
     #expect(
