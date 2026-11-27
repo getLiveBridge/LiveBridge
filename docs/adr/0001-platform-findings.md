@@ -136,7 +136,12 @@ reset times in a panel that ignores the mouse
   (fixture `realtime-item-added-handoff-request.json`): `handoff_id` and `item_id` (the same
   `item_…` id), `input_transcript` (a string: the voice model's delegation text) and
   `active_transcript` (an array of `{role, text}`: on 0.166.0 it holds the user's turn, it is not
-  empty). In every run the delegation text was close to the user's own words; how much the
+  empty). It is not all the speech since the last handoff: on `v3`, at each `turn.done` where the
+  pending lines exceed 4 KiB (`RealtimeDelegation::FIELD_BYTES`), codex moves the finished ones into
+  its thread's history and out of the next `active_transcript` (0.172.0,
+  `realtime_websocket/methods.rs`, `take_completed_transcript`). Observed on 2026-11-27: after an
+  owner's line of some 600 Cyrillic characters, the handoff carried only the voice's "Угу." and the
+  owner's last few words. In every run the delegation text was close to the user's own words; how much the
   model rewrites it depends on the prompt. Speech-recognition errors pass straight through (one
   run recognised the first words in the wrong language). The data channel sees the same event as
   `delegation.created` (`handoff_id: "handoff_1"`, `target: "client"`).
@@ -432,6 +437,27 @@ arrives as `transcript/done` (`turn.done`) later.
 - The voice's last delta came about 1 s before the end of its audio (1 reply): its text runs ahead of
   its sound.
 
+**(s) The voice's text lags its sound on GPT-Live-1.1.** Observed, 2026-11-27, `codex-cli 0.172.0`,
+from codex's log of real calls; no voice was spent for this. Item (r) no longer holds for the
+voice's words:
+
+- In one reply on an open line, the voice's `turn.done` gave `start_ms` 245200 and `end_ms`
+  263800 from a session that started at 18:06:01.2, so its sound ran from about 18:10:06 to
+  18:10:25. The app got no `transcript/delta` between the `appendSpeech` at 18:10:03.7 and
+  18:10:19, and the reply's `done` at 18:10:22: the first words' text came about 12 s after they
+  were said, near the end of the reply.
+- Three lines a result opened (18:35, 19:02, 19:05) each got no `transcript/delta` at all and were
+  closed by the app with `thread/realtime/stop` 5 s after they connected, the first-word wait; in
+  the 19:05 one the owner heard the voice start the result, and it stopped in mid-sentence.
+- Before a seeded line's voice speaks, the service reads what the line was given: for a long result
+  and question, `session.context.appended` ran to `end_ms` 3200 after `session.started`.
+- The voice's sound read from the peer's `inbound-rtp` stats in the WKWebView page (`voice.js`, the
+  microphone's detector at -45 dB) works: in two smoke runs on 2026-11-27, `voiceStarted` and
+  `voiceEnded` bracketed each of the voice's 6 replies (2.0 to 4.3 s each), and each line closed
+  20.4 s after its last `voiceEnded`, the silence wait, with no `voiceStarted` in that silence while
+  the service went on sending packets. Both lines were opened by speech: a line a result opened, with
+  the owner silent, was not run, and how late the detector hears the voice start was not measured.
+
 ### Claude Code mod API
 
 **(e) Session title.** Observed against the desktop app's own session list: for each of 5
@@ -606,7 +632,8 @@ band in the terminal.
 ### Codex
 
 - A `handoff_request` item becomes a voice request: `brief` from `input_transcript`, `transcript`
-  from `active_transcript` (`[{role, text}]`), de-duplicated by `handoff_id`.
+  from the lines the app heard since the last request (`HandoffSpeech`), not from
+  `active_transcript`, which loses lines past 4 KiB (finding (b)); de-duplicated by `handoff_id`.
 - We will start every realtime session with `version: "v3"`, `outputModality: "audio"`,
   `includeStartupContext: false`, `clientManagedHandoffs: true`, `delegationAckFiller: true`
   (the silence rule waits for that acknowledgement), and `initialItems` for continuity.
@@ -747,4 +774,7 @@ to 1.4 s. Until the owner or the voice speaks on the line, its silence is
 `CallMachine.firstWordSeconds` (5 s) instead of 20 s, also after another line arrives; then it
 closes and chimes, and a voice that would have started later is cut off. Noted on 2026-11-14: since 0.6.0
 these waits are the owner's, `CallMachine.Timeouts` from Settings (`firstWord` 5 s and `silence` 20 s
-by default), and `CallMachine.firstWordSeconds` is gone.
+by default), and `CallMachine.firstWordSeconds` is gone. Amended on 2026-11-27, after item (s): the
+voice's text comes seconds after its sound, so the voice speaking is heard in its own track (the
+page's `voiceStarted` and `voiceEnded`), which ends the first-word wait, keeps the line open up to the
+`noise` wait while it plays and holds a held result; the `firstWord` default is 10 s.

@@ -4,6 +4,8 @@ import Foundation
 /// voice detection, the input level and failures.
 public enum AudioEvent: Sendable, Equatable {
   case speechStarted, speechEnded
+  /// The voice's track grew loud or fell silent: it plays words long before their text arrives.
+  case voiceStarted, voiceEnded
   /// The input level while the line is open, 0 to 1; it drives only the menu bar meter.
   case level(Double)
   /// The microphone or the peer connection failed.
@@ -18,6 +20,8 @@ public enum AudioEvent: Sendable, Equatable {
     switch type {
     case "speechStarted": self = .speechStarted
     case "speechEnded": self = .speechEnded
+    case "voiceStarted": self = .voiceStarted
+    case "voiceEnded": self = .voiceEnded
     case "level":
       guard let value = message["value"] as? Double else { return nil }
       self = .level(value)

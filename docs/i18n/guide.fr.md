@@ -132,7 +132,7 @@ débogage :
 se connecte :
 
 - **Silence before the line closes** (20 secondes par défaut), **Wait for a first word on a line
-  a result opened** (5 secondes) et **Sound without words before the line closes** (90 secondes) :
+  a result opened** (10 secondes) et **Sound without words before the line closes** (90 secondes) :
   combien de temps chaque sorte de silence garde une ligne ouverte, de 0 à 300 secondes. 0 désactive
   le silence ou le son sans paroles, et une attente du premier mot à 0 attend aussi longtemps que le
   silence. Avec les trois à 0, le silence ne ferme jamais la ligne : elle reste ouverte, facturée

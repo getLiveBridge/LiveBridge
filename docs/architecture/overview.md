@@ -93,6 +93,12 @@ microphone or Claude:
   text, if codex does that, would stay below the owner's line and join the next reply until a final
   text. So the menu is as late as codex's deltas, not its final text
   ([ADR 0001 (r)](../adr/0001-platform-findings.md)).
+- `HandoffSpeech`: the call's speech since the last request, word for word, which `Bridge` puts
+  in the next request's transcript: every finished line, then the lines still being said. codex's
+  own `active_transcript` leaves out lines it moved into its thread past 4 KiB
+  ([ADR 0001 (b)](../adr/0001-platform-findings.md)), so it is not read. A line a request took
+  midway adds only its words past that part when it ends. A muted handoff takes nothing; a new
+  call starts empty.
 - `RealtimeSession`: one ephemeral, read-only codex thread per realtime session; it refuses to go
   on unless codex reports every MCP server disabled, interrupts every codex turn and declines
   every request codex sends.
@@ -349,7 +355,9 @@ of the app's two sounds means). The line stays open for its result up to
 `CallMachine.resultWindowSeconds` (120 s) after the latest handoff, however silent it is (sound
 without words still closes it after the noise timeout). A result from a session handed a request in that window
 is given to the voice to say now (`thread/realtime/appendSpeech`, speakable text) once neither the
-owner (local voice detection) nor the voice is speaking; when either was, the bridge waits until
+owner (local voice detection) nor the voice is speaking (its transcript, or the sound of its track,
+which the page reads from the peer's inbound audio stats every 100 ms: the text comes seconds after the
+sound, [ADR 0001 (s)](../adr/0001-platform-findings.md)); when either was, the bridge waits until
 both are silent and then a grace of 0.8 s. The window then ends and the silence rule closes the
 line. A window that passes with no result closes the line once it is silent; when the result comes,
 it opens the line again, as below. A question or an approval notice of the session the open line is
@@ -376,7 +384,8 @@ sequenceDiagram
   Codex-->>Bridge: SDP answer
   Bridge->>Page: applyAnswer, then flushPreroll (connecting → live)
   Page->>Codex: the queued speech, then live audio
-  Codex-->>Bridge: handoff_request (brief + transcript)
+  Codex-->>Bridge: handoff_request (brief)
+  Bridge->>Bridge: add the speech heard since the last request
   Bridge->>Bridge: enqueue for the target, arm the 120 s result window
   Bridge->>Owner: a short sound (queued)
   Codex-->>Owner: "On it."

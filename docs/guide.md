@@ -119,7 +119,7 @@ the switch here asks.
 **Line** holds how long the line stays open in quiet and how it connects:
 
 - **Silence before the line closes** (20 seconds by default), **Wait for a first word on a line
-  a result opened** (5 seconds) and **Sound without words before the line closes** (90 seconds):
+  a result opened** (10 seconds) and **Sound without words before the line closes** (90 seconds):
   how long each kind of quiet keeps an open line, from 0 to 300 seconds. 0 switches the silence or
   the sound without words off, and a first-word wait of 0 waits as long as the silence. With all
   three at 0, quiet never closes the line: it stays open, billed all the while

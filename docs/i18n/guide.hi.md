@@ -116,7 +116,7 @@ menu का **Quick Settings** इसके पाँच switches रखता �
 **Line** में यह है कि ख़ामोशी में line कितनी देर खुली रहती है और वह कैसे जुड़ती है:
 
 - **Silence before the line closes** (डिफ़ॉल्ट रूप से 20 सेकंड), **Wait for a first word on a line
-  a result opened** (5 सेकंड) और **Sound without words before the line closes** (90 सेकंड): हर तरह
+  a result opened** (10 सेकंड) और **Sound without words before the line closes** (90 सेकंड): हर तरह
   की चुप्पी खुली line को कितनी देर खुला रखती है, 0 से 300 सेकंड तक। 0 चुप्पी या शब्दों के बिना आवाज़
   वाले timer को बंद कर देता है, और पहले शब्द की प्रतीक्षा 0 पर हो तो वह चुप्पी जितनी ही देर चलती है।
   तीनों 0 हों तो चुप्पी line को कभी बंद नहीं करती: वह खुली रहती है, और पूरे समय उसका बिल बनता है
