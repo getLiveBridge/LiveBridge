@@ -41,6 +41,8 @@ dans la session et ce que Claude répond, vous pouvez donc passer de la parole a
 
 <p align="center"><img src="../assets/readme-demo.gif" alt="Conversation avec une session Claude Code via LiveBridge" width="100%"></p>
 
+<p align="center">Le GIF est muet : <a href="https://getlivebridge.com/assets/livebridge-demo.mp4">regardez la démo de 64 secondes avec le son</a> sur getlivebridge.com.</p>
+
 **Local par conception.** Pas de télémétrie et pas de serveur propre : LiveBridge est un pont sur
 votre Mac entre votre propre codex et votre propre Claude Code. L'application et le mod
 communiquent uniquement par un socket Unix que seul votre utilisateur peut ouvrir, et

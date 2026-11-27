@@ -41,6 +41,8 @@ responde Claude, así que puedes alternar entre hablar y escribir.
 
 <p align="center"><img src="../assets/readme-demo.gif" alt="Hablando con una sesión de Claude Code a través de LiveBridge" width="100%"></p>
 
+<p align="center">El GIF no tiene sonido: <a href="https://getlivebridge.com/assets/livebridge-demo.mp4">mira la demo de 64 segundos con sonido</a> en getlivebridge.com.</p>
+
 **Local por diseño.** Sin telemetría y sin servidor propio: LiveBridge es un puente en tu Mac
 entre tu propio codex y tu propio Claude Code. La aplicación y el mod se comunican por un socket
 Unix que solo tu usuario puede abrir, y la aplicación no escucha en ningún puerto de red. Además

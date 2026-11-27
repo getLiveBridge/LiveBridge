@@ -64,6 +64,8 @@ talk it over with first, while Claude keeps working or waits.
 
 <p align="center"><img src="docs/assets/readme-demo.gif" alt="Talking to a Claude Code session through LiveBridge" width="100%"></p>
 
+<p align="center">The GIF has no sound: <a href="https://getlivebridge.com/assets/livebridge-demo.mp4">watch the 64-second demo with sound</a> on getlivebridge.com.</p>
+
 **Local by design.** No telemetry and no server of its own: LiveBridge is a bridge on your Mac
 between your own codex and your own Claude Code. The mod talks to the app over a Unix socket only
 your user can open, and the app listens on no network port. Your voice, and what you type in a joined

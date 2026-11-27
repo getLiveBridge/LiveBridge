@@ -41,6 +41,8 @@ LiveBridge — це застосунок у рядку меню macOS, який 
 
 <p align="center"><img src="../assets/readme-demo.gif" alt="Розмова з сесією Claude Code через LiveBridge" width="100%"></p>
 
+<p align="center">GIF без звуку: <a href="https://getlivebridge.com/assets/livebridge-demo.mp4">64-секундне демо зі звуком</a> — на getlivebridge.com.</p>
+
 **Локально за задумом.** Жодної телеметрії та жодного власного сервера: LiveBridge — це міст на
 вашому Mac між вашим власним codex і вашим власним Claude Code. Застосунок і мод спілкуються
 через Unix-сокет, який може відкрити лише ваш користувач, а застосунок не слухає жодного

@@ -37,6 +37,8 @@ Claude 工作时你不必让线路一直打开：它的答复会重新打开已�
 
 <p align="center"><img src="../assets/readme-demo.gif" alt="通过 LiveBridge 与 Claude Code 会话对话" width="100%"></p>
 
+<p align="center">GIF 没有声音：<a href="https://getlivebridge.com/assets/livebridge-demo.mp4">在 getlivebridge.com 观看 64 秒的有声演示</a>。</p>
+
 **设计上完全本地。** 没有遥测，也没有自己的服务器：LiveBridge 只是你 Mac 上的一座桥，连接你自己的 codex 与你自己的
 Claude Code。应用与模组之间通过只有你的用户才能打开的 Unix 套接字通信，应用不监听任何网络端口。除了这两个工具本来就会发送的内容
 （语音线路经你的 codex 发往 OpenAI，仅在线路打开期间，其中包括你在已加入的会话中输入的内容；Claude 的工作经你的 Claude Code 会话发往 Anthropic），

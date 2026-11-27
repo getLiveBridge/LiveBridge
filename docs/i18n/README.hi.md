@@ -41,6 +41,8 @@ session में क्या टाइप करते हैं और Claude
 
 <p align="center"><img src="../assets/readme-demo.gif" alt="LiveBridge के ज़रिए Claude Code session से बात करना" width="100%"></p>
 
+<p align="center">GIF में आवाज़ नहीं है: <a href="https://getlivebridge.com/assets/livebridge-demo.mp4">आवाज़ के साथ 64 सेकंड का demo</a> getlivebridge.com पर देखें।</p>
+
 **डिज़ाइन से ही लोकल।** कोई telemetry नहीं और अपना कोई server नहीं: LiveBridge आपके Mac पर आपके अपने
 codex और आपके अपने Claude Code के बीच एक bridge है। App और mod सिर्फ़ एक Unix socket पर बात करते
 हैं, जिसे केवल आपका user खोल सकता है, और app किसी network port पर listen नहीं करता। जो traffic ये
