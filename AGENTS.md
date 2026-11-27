@@ -18,7 +18,8 @@ the status section at most 50 lines); detail lives in the documents it links to.
   `notarize.sh`.
 - `docs/`: the user guide the README summarises (`guide.md`, `privacy.md`,
   `known-limitations.md`), the [architecture](docs/architecture/overview.md), [ADRs](docs/adr/),
-  the translations of the README and the guide (`i18n/`), and the stayfixed scaffold ([CONTRIBUTING.md](CONTRIBUTING.md#stayfixed) says what each file is for).
+  the translations of the README, the guide, privacy and known limitations (`i18n/`), and the
+  stayfixed scaffold ([CONTRIBUTING.md](CONTRIBUTING.md#stayfixed) says what each file is for).
 
 ## Build and test
 
@@ -47,6 +48,8 @@ the status section at most 50 lines); detail lives in the documents it links to.
 - One fact, one home ([documentation policy](docs/architecture/documentation.md)): link to it
   instead of copying it, and fix the docs in the same change as the code.
 - Conventional Commits, one logical change each.
+- A pull request an agent helped write follows
+  [AI-assisted contributions](CONTRIBUTING.md#ai-assisted-contributions).
 
 ## Current status
 
