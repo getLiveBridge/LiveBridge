@@ -30,7 +30,7 @@ body:
     id: cost
     attributes:
       label: Billing, privacy and security
-      description: Would it keep the voice line open longer, send anything new to OpenAI or Anthropic, or let the voice do more? See the README's Billing and Privacy sections and SECURITY.md.
+      description: Would it keep the voice line open longer, send anything new to OpenAI or Anthropic, or let the voice do more? See Billing in docs/guide.md, docs/privacy.md and SECURITY.md.
   - type: dropdown
     id: contribute
     attributes:

@@ -19,10 +19,14 @@ detail into the document that owns it rather than to raise the number.
 **Where each kind of fact lives.** Phase history goes in the roadmap. Contracts — interfaces,
 invariants, what a component promises — go in the architecture documents. Procedures you would
 otherwise re-derive under pressure go in the runbooks. A decision, with the context that forced
-it and what it costs, goes in an ADR. A defect goes in the bug ledger, one file per entry. A
-research note — what was found out about something outside the repository, with its sources and
-the date it was read — goes in `docs/research/`, one file per question; it informs a spec or an
-ADR and decides nothing itself.
+it and what it costs, goes in an ADR. A defect goes in the bug ledger, one file per entry. What
+a user needs to run the app goes in the user guide: commands, the band, the menu, settings,
+billing, updating and uninstalling in `docs/guide.md`, what leaves the Mac in `docs/privacy.md`,
+and what does not work yet in `docs/known-limitations.md`; the README keeps the requirements,
+the install steps and a short summary of each, with a link. A translation follows its English
+file and says so. A research note — what was found out about something outside the repository,
+with its sources and the date it was read — goes in `docs/research/`, one file per question; it
+informs a spec or an ADR and decides nothing itself.
 
 **Superseded prose is removed in the same change that supersedes it.** Leaving it in place is
 how a document comes to describe two designs at once, and a reader has no way to tell which

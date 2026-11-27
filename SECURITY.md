@@ -193,7 +193,7 @@ yours. The mod says so for a prompt whose origin is `composer`, text typed into 
 included, and for an answer to Claude's question that did not come by voice. That a prompt typed
 in the Claude desktop app arrives as `composer` is inferred from its transcripts and was not
 observed: if it arrives as `sdk`, nothing typed there is recorded, no gap is marked, and the pause
-reaches less ([known limitations](README.md#known-limitations),
+reaches less ([known limitations](docs/known-limitations.md),
 [ADR 0001 (m)](docs/adr/0001-platform-findings.md)). A prompt of another origin, from another
 agent, a plugin, a schedule or a host, is not recorded as yours, though Claude's answer to it is.
 That `bridge` is Remote Control is the type's wording and was not observed; if it arrives as
@@ -233,7 +233,7 @@ those shapes goes to OpenAI as typed, personal text included.
   `[CONTEXT]` line with the summaries loaded before it. It holds at most 64 lines for each of the 20 sessions used last
   (`Conversation.keptLines`, `Continuity.keptConversations`), longer for none of them. A session
   that has left keeps its lines until 20 others have been used since; to erase them sooner, [join it
-  again and press **New conversation**](README.md#privacy). The folder is `0700`; whether Time
+  again and press **New conversation**](docs/privacy.md). The folder is `0700`; whether Time
   Machine or another backup copies it has not been tested. The sync fills it **with no call
   running**: while a session is joined, what you type in it and Claude's answers are recorded, and
   the next line opened with that session gives them to OpenAI. Claude already repeats much of the
@@ -246,7 +246,7 @@ those shapes goes to OpenAI as typed, personal text included.
   (`TurnTracker.snapshot`, `register.tsx`). `/live off`, the session's end, `/clear` and removing the
   session in the app delete its key. Whether `claude plugin uninstall` removes the file was not run:
   Claude Code's documentation of what it deletes does not name it
-  ([Uninstall](README.md#uninstall)).
+  ([Uninstall](docs/guide.md#uninstall)).
 - **The pause keeps new text out and removes nothing.** With **Pause sync while the call is
   stopped** on and the call stopped, what you type is not recorded, a prompt typed into a running
   turn included, and the session is marked *paused* (`Continuity.admits`, `Bridge.sync`). Typing
@@ -427,8 +427,8 @@ not otherwise reset the permission, so a prompt at another time is worth a secon
 
 ### What leaves the Mac
 
-The list of what goes to OpenAI, and when, is in the README's
-[Privacy](README.md#privacy) section. LiveBridge sends OpenAI no audio or text while the line
+The list of what goes to OpenAI, and when, is in
+[docs/privacy.md](docs/privacy.md). LiveBridge sends OpenAI no audio or text while the line
 is closed: voice detection runs on the Mac. Codex itself keeps running between lines, and opening
 Settings starts another codex to list the voices, and opening the menu starts a short-lived one
 that reads your Codex usage from OpenAI, also while the call is off; what codex sends on its own
@@ -443,8 +443,8 @@ Settings' check of a custom **Summary model** sends one short request the same w
 **Feedback & Support** links, **Report a Bug…**, **LiveBridge Website** and **Star LiveBridge on
 GitHub**, only open the repository's bug form, getlivebridge.com and the repository's page in your
 browser; the app sends nothing. Its other items stay on the Mac: **Debug Mode** writes the voice's
-network numbers to a local file ([Settings](README.md#settings)), and **Uninstall LiveBridge…**
-moves the app and its files to the Trash ([Uninstall](README.md#uninstall)).
+network numbers to a local file ([Settings](docs/guide.md#settings)), and **Uninstall LiveBridge…**
+moves the app and its files to the Trash ([Uninstall](docs/guide.md#uninstall)).
 
 For updates, the app itself makes two kinds of request, and no others: the release check and the
 image download below. It also runs `gh` and `claude` for the requests listed below; what `gh`

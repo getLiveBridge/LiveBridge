@@ -17,7 +17,7 @@ says, not in an issue. Everyone taking part follows the [Code of Conduct](CODE_O
 | `wire/fixtures/` | One JSON file per message between the mod and the app: the shared oracle both sides test against. |
 | `wire/summary-budget.json` | The time the mod allows a summary, which both sides test their constant against, and the time it allows Settings' model check, which the app's wait must outlast. |
 | `scripts/` | `check.sh` (every check CI runs but the floor run), `check-mod.sh` (the mod's engine-facing half), `check-floor.sh` (that half on the lowest Claude Code the README promises), `build-app.sh` (build, install, uninstall, package), `smoke.sh` (end to end). |
-| `docs/` | [Architecture](docs/architecture/overview.md) and [ADRs](docs/adr/); the rest is the stayfixed scaffold (below). |
+| `docs/` | The user guide the README links to ([guide.md](docs/guide.md), [privacy.md](docs/privacy.md), [known-limitations.md](docs/known-limitations.md)) and the translations of all four (`i18n/`); [architecture](docs/architecture/overview.md) and [ADRs](docs/adr/); the rest is the stayfixed scaffold (below). |
 
 ## Where to start
 

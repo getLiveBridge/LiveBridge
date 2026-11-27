@@ -153,7 +153,7 @@ Debug Files** button, and Feedback & Support's **Debug Mode** item.
 
 ## Documents
 
-In the same change as the code, each where its fact lives: the README's [Settings](../../README.md#settings)
+In the same change as the code, each where its fact lives: the README's [Settings](../guide.md#settings)
 and menu sections and its [Privacy](../../README.md#privacy) section (debug mode writes local files,
 off by default); CONTRIBUTING's call-stats section; the bug report form's request for the files;
 `CHANGELOG.md`'s Unreleased section; the README's translations under `docs/i18n/`, in the same
