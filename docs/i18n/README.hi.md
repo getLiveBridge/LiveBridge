@@ -121,9 +121,11 @@ disk image, सोर्स से build और अनुमतियाँ [इ
 
 mod इस repository के marketplace से आता है ([त्वरित शुरुआत](#त्वरित-शुरुआत) के commands), जो नवीनतम
 release के tag की ओर इशारा करता है, इसलिए आप जो mod install करते हैं वह उसी release का होता है। App
-दोनों तरीकों में `/Applications` में जाता है: disk image से, या source से build करके। 0.4.2 के बाद के पहले release से, डिस्क इमेज
-LiveBridge की Developer ID से signed और Apple द्वारा notarized है; 0.4.2 और उससे पहले के releases ad hoc
-signed थे और notarized नहीं हैं, और source से बना build न तो Developer ID से signed होता है और न notarized।
+किसी भी तरीके से install करें, `/Applications` में जाता है: Homebrew से, disk image से, या source से
+build करके। 0.4.2 के बाद के पहले release से, डिस्क इमेज, जिसे Homebrew भी install करता है,
+LiveBridge की Developer ID से signed और Apple द्वारा notarized है; 0.4.2 और उससे पहले के releases ad
+hoc signed थे और notarized नहीं हैं, और source से बना build न तो Developer ID से signed होता है और न
+notarized।
 
 ### डिस्क इमेज से
 

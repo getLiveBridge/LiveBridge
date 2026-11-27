@@ -88,9 +88,7 @@ claude plugin install livebridge@livebridge
 
 ## 安装
 
-模组来自本仓库的 marketplace（即[快速开始](#快速开始)中的命令），它指向最新发布版本的标签，因此你安装的就是该版本的模组。
-应用无论采用哪种方式，都安装在 `/Applications`：
-通过磁盘映像，或从源码构建。从 0.4.2 之后的第一个发布版本起，磁盘映像使用 LiveBridge 的 Developer ID 签名，并经 Apple 公证；0.4.2 及更早的版本使用 ad hoc 签名，未经公证；从源码构建的应用既未使用 Developer ID 签名，也未经公证。
+模组来自本仓库的 marketplace（即[快速开始](#快速开始)中的命令），它指向最新发布版本的标签，因此你安装的就是该版本的模组。无论采用哪种方式安装，应用都位于 `/Applications`：通过 Homebrew、通过磁盘映像，或从源码构建。从 0.4.2 之后的第一个发布版本起，磁盘映像（Homebrew 安装的也是它）使用 LiveBridge 的 Developer ID 签名，并经 Apple 公证；0.4.2 及更早的版本使用 ad hoc 签名，未经公证；从源码构建的应用既未使用 Developer ID 签名，也未经公证。
 
 ### 通过磁盘映像安装
 

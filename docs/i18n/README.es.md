@@ -124,13 +124,13 @@ compilación desde el código fuente y los permisos; [Actualización](guide.es.m
 
 ## Instalación
 
-El mod viene del marketplace de este repositorio (los comandos de [Inicio
-rápido](#inicio-rápido)), que apunta a la etiqueta de la última versión, así que el mod que
-instalas es el de esa versión. La aplicación va en `/Applications` en ambos casos: desde la imagen
-de disco o compilada desde el código fuente. Desde la primera versión posterior
-a 0.4.2, la imagen de disco está firmada con el Developer ID de LiveBridge y notarizada por Apple;
-la 0.4.2 y las anteriores se firmaron ad hoc y no están notarizadas, y una compilación desde el
-código fuente ni está firmada con el Developer ID ni notarizada.
+El mod viene del marketplace de este repositorio (los comandos de [Inicio rápido](#inicio-rápido)),
+que apunta a la etiqueta de la última versión, así que el mod que instalas es el de esa versión. La
+aplicación va en `/Applications` la instales como la instales: con Homebrew, desde la imagen de
+disco o compilada desde el código fuente. Desde la primera versión posterior a 0.4.2, la imagen de
+disco, que Homebrew también instala, está firmada con el Developer ID de LiveBridge y notarizada por
+Apple; la 0.4.2 y las anteriores se firmaron ad hoc y no están notarizadas, y una compilación desde
+el código fuente ni está firmada con el Developer ID ni notarizada.
 
 ### Desde la imagen de disco
 

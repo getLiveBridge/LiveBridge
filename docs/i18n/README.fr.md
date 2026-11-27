@@ -130,12 +130,13 @@ compilation depuis les sources et les autorisations ; [Mises à jour](guide.fr.m
 ## Installation
 
 Le mod provient de la marketplace de ce dépôt (les commandes du [Démarrage
-rapide](#démarrage-rapide)), qui désigne le tag de la dernière version : le mod que vous
-installez est donc celui de cette version. L'application va dans `/Applications` dans les deux
-cas : depuis l'image disque, ou compilée depuis les sources. À partir de la première version
-postérieure à 0.4.2, l'image disque est signée avec le Developer ID de LiveBridge et notarisée par
-Apple ; la 0.4.2 et les précédentes étaient signées ad hoc et non notarisées, et une compilation
-depuis les sources n'est ni signée avec le Developer ID ni notarisée.
+rapide](#démarrage-rapide)), qui désigne le tag de la dernière version : le mod que vous installez
+est donc celui de cette version. L'application va dans `/Applications` quelle que soit la façon de
+l'installer : avec Homebrew, depuis l'image disque, ou compilée depuis les sources. À partir de la
+première version postérieure à 0.4.2, l'image disque, que Homebrew installe aussi, est signée avec
+le Developer ID de LiveBridge et notarisée par Apple ; la 0.4.2 et les précédentes étaient signées
+ad hoc et non notarisées, et une compilation depuis les sources n'est ni signée avec le Developer ID
+ni notarisée.
 
 ### Depuis l'image disque
 
