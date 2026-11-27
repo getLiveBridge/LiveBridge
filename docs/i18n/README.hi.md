@@ -6,6 +6,8 @@
 
 <p align="center"><strong>खुले Claude Code session से voice में बात करें।</strong></p>
 
+<p align="center">उनके लिए जो Apple Silicon Mac पर Claude Code इस्तेमाल करते हैं और जिनके ChatGPT plan के Codex में voice शामिल है।</p>
+
 <p align="center">
   <a href="https://github.com/getLiveBridge/LiveBridge/actions/workflows/ci.yml"><img src="https://github.com/getLiveBridge/LiveBridge/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI"></a>
   <a href="https://scorecard.dev/viewer/?uri=github.com/getLiveBridge/LiveBridge"><img src="https://api.scorecard.dev/projects/github.com/getLiveBridge/LiveBridge/badge" alt="OpenSSF Scorecard"></a>

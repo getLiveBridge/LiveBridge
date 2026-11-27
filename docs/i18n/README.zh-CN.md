@@ -6,6 +6,8 @@
 
 <p align="center"><strong>用语音与已打开的 Claude Code 会话对话。</strong></p>
 
+<p align="center">适合在 Apple Silicon Mac 上使用 Claude Code、且所用 ChatGPT 套餐的 Codex 包含语音的用户。</p>
+
 <p align="center">
   <a href="https://github.com/getLiveBridge/LiveBridge/actions/workflows/ci.yml"><img src="https://github.com/getLiveBridge/LiveBridge/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI"></a>
   <a href="https://scorecard.dev/viewer/?uri=github.com/getLiveBridge/LiveBridge"><img src="https://api.scorecard.dev/projects/github.com/getLiveBridge/LiveBridge/badge" alt="OpenSSF Scorecard"></a>

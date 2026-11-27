@@ -6,6 +6,8 @@
 
 <p align="center"><strong>Talk to an open Claude Code session by voice.</strong></p>
 
+<p align="center">For Claude Code users on an Apple Silicon Mac with a ChatGPT plan whose Codex includes voice.</p>
+
 <p align="center">
   <a href="https://github.com/getLiveBridge/LiveBridge/actions/workflows/ci.yml"><img src="https://github.com/getLiveBridge/LiveBridge/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI"></a>
   <a href="https://scorecard.dev/viewer/?uri=github.com/getLiveBridge/LiveBridge"><img src="https://api.scorecard.dev/projects/github.com/getLiveBridge/LiveBridge/badge" alt="OpenSSF Scorecard"></a>
