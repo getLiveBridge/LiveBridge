@@ -84,8 +84,11 @@ claude plugin install livebridge@livebridge
    **Start**।
 5. **Start** दबाएँ। पहली बार macOS microphone की अनुमति माँगता है: अनुमति दें। वह यह भी पूछ सकता है
    कि क्या LiveBridge आपके local network पर devices ढूँढ सकता है; voice line को यह भी चाहिए। अब band
-   **Listening** दिखाता है: आपके Mac पर एक voice detector आपके बोलने का इंतज़ार करता है, और अभी कुछ
-   नहीं भेजा जाता।
+   **Listening** दिखाता है: आपके Mac पर एक voice detector आपके बोलने का इंतज़ार करता है, और जब तक आप
+   बोलते नहीं, कोई audio आपके Mac से बाहर नहीं जाता। मौजूदा mod के साथ, जब voice के पास session का
+   कोई हिस्सा न हो, जैसे पहली call पर, तो Start उसी समय session से एक छोटा सारांश माँग लेता है, जब
+   तक **Pause sync** उसे रोक न ले: Claude उसे आपके Claude Code के ज़रिए, आपके Claude usage से लिखता
+   है, और वह OpenAI तक सिर्फ़ line के साथ जाता है ([कब](guide.hi.md#बैंड-और-मेन्यू))।
 6. पूछें "यह session किस पर काम कर रहा है?"। band **Connecting** और फिर **Live** दिखाता है, और voice
    जवाब देता है, session की बातचीत से या सवाल Claude को सौंपकर। कोई बदलाव माँगें, तो voice उसे Claude
    को सौंपता है और Claude का काम पूरा होने पर नतीजा बताता है। बातचीत शांत होने पर line बंद हो जाती है

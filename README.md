@@ -111,8 +111,11 @@ claude plugin install livebridge@livebridge
    **Start**.
 5. Press **Start**. The first time, macOS asks for the microphone: allow it. It may also ask
    whether LiveBridge may find devices on your local network; the voice line needs that too. The
-   band now reads **Listening**: a voice detector on your Mac waits for you to speak, and nothing is
-   sent yet.
+   band now reads **Listening**: a voice detector on your Mac waits for you to speak, and no audio
+   leaves your Mac until you do. With a current mod, Start already asks the session for a short
+   summary when the voice lacks part of it, as on a first call, unless **Pause sync** holds it
+   back: Claude writes it through your Claude Code, on your Claude usage, and it goes to OpenAI
+   only with the line ([when](docs/guide.md#the-band-and-the-menu)).
 6. Ask "What is this session working on?". The band shows **Connecting**, then **Live**, and the
    voice answers, from the session's conversation or by handing the question to Claude. Ask for a
    change, and the voice hands it to Claude and tells you the result when Claude is done. When the
