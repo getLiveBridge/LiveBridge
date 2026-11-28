@@ -458,6 +458,24 @@ voice's words:
   the service went on sending packets. Both lines were opened by speech: a line a result opened, with
   the owner silent, was not run, and how late the detector hears the voice start was not measured.
 
+**(t) No way to give an open line text the voice does not speak.** Read, 2026-11-28, in the source
+of `codex-cli 0.172.0` (`realtime_conversation.rs`, `methods_common.rs`,
+`methods_frameless_bidi.rs`, `protocol.rs`), after a call in which the voice said the plan the owner
+had asked for twice:
+
+- The GPT-Live wire (`FramelessBidi`) sends `session.context.append` on one of two channels,
+  `Speakable` or `Commentary`; codex's own comment says an omitted channel defaults to speakable.
+- `thread/realtime/appendText` takes only `threadId`, `text` and `role`, and codex sends it as
+  `session.context.append` with no channel, so every line the app appends is speakable. Codex sets
+  `Commentary` only on its own handoff output (the quiet reasoning status and the commentary handoff
+  mode); no app-server method lets a client choose it.
+- In the call, the owner asked by voice for the night plan again and the voice handed it off. While
+  that request waited, Claude's answer to an earlier turn about the same plan arrived as a `[CLAUDE]`
+  line, and the voice retold it unasked; 31 s later the request's `[RESULT]` came and was said as
+  well. One call: a count, not a rate.
+- So a synced line can make the voice speak, as item (o) found, and the app's only way to prevent
+  it is not to send the line.
+
 ### Claude Code mod API
 
 **(e) Session title.** Observed against the desktop app's own session list: for each of 5
@@ -748,7 +766,9 @@ What the owner types in a session, and Claude's answer, go into its open line as
 arrive; a closed line gets them as seed when it next opens, and is never opened for them. If the
 owner talks to the voice and types to Claude at once, the voice must not fall behind, and it may
 repeat what was typed. So the reactions in item (o) are accepted, and nothing waits for the owner's
-words.
+words. Noted on 2026-11-28, after item (t): codex offers no append the voice does not speak, so a
+synced line can still be said unasked, also when it repeats a result that is coming; the owner kept
+this decision.
 
 ## Decision: a result opens the closed line
 
