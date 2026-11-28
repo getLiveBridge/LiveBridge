@@ -204,8 +204,15 @@ depuración:
   solicitud en Claude Code; LiveBridge nunca la responde por ti.
 - Recibe lo que escribes. Mientras una sesión está unida, lo que escribes en ella y la respuesta
   final de Claude a cada turno que no fue una petición por voz pasan a la conversación de esa sesión
-  con la voz como contexto: no suena ningún aviso por ellos ni abren una línea cerrada ([los límites
-  de esto](known-limitations.es.md)). Una línea abierta los recibe de inmediato; una línea que se
+  con la voz como contexto ([los límites de esto](known-limitations.es.md)). Lo que escribes no hace
+  sonar ningún aviso ni abre una línea cerrada. La respuesta de Claude a un prompt que
+  escribiste, en la sesión objetivo y con la llamada en marcha, se dice como un resultado: abre una
+  línea cerrada o se dice en la línea abierta sobre esa sesión; la respuesta a un turno sin él, como
+  el mensaje de otra sesión, sigue siendo contexto, también si en él respondiste con el teclado a
+  una pregunta de Claude. Los bloques
+  `<system-reminder>` que un cliente añade a lo que envías, como las notas de la aplicación de
+  escritorio sobre sesiones secundarias, no son tus palabras y se omiten; una imagen enviada sola no
+  deja nada que guardar. Una línea abierta los recibe de inmediato; una línea que se
   abre después empieza con ellos. Una respuesta por voz que una petición más nueva desplazó no se
   dice, pero se guarda y se añade igual. El texto de Claude a mitad de turno no se sincroniza, salvo
   lo que escribió justo antes de una pregunta o una solicitud de permiso, que va con ella; los

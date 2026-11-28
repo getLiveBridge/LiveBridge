@@ -107,6 +107,7 @@ test('aKeyboardAnswerHoldsTheFreeText', () => {
 test('aKeyboardAnswerIsTyped', () => {
   assert.equal(keyboardAnswer({ answers: { 'Which name?': 'out' } }).kind, 'typed')
   assert.equal(keyboardAnswer({ answers: {}, response: 'neither' }).kind, 'typed')
+  assert.ok(!('prompt' in keyboardAnswer({ answers: { 'Which name?': 'out' } })), 'an answer at the keyboard is no prompt')
 })
 
 /** The owner wrote nothing: under the pause an owner's line would refuse the turn. */

@@ -239,16 +239,17 @@ struct BridgeTests {
 
   func setPause(_ on: Bool) { pause.withLock { $0 = on } }
 
-  /// A line of a turn, as the mod posts it.
+  /// A line of a turn, as the mod posts it; a `typed` line is a prompt unless `prompt` says not.
   @discardableResult
   func sync(
     _ id: SessionID, turn: String = "turn-1", request: RequestID? = nil, kind: SyncKind = .typed,
-    _ text: String? = nil
+    prompt: Bool = true, _ text: String? = nil
   ) async throws -> HTTPResponse {
     try await post(
       "/v1/sync",
       SyncBody(
-        sessionId: id, turn: TurnRef(id: turn, request: request), kind: kind, text: text))
+        sessionId: id, turn: TurnRef(id: turn, request: request), kind: kind, text: text,
+        prompt: kind == .typed && prompt ? true : nil))
   }
 
   /// The conversations as saved, which a restarted app reads.
@@ -3410,6 +3411,77 @@ struct BridgeTests {
       ])
   }
 
+  /// What the owner types opens nothing; Claude's answer to it opens the closed line about the
+  /// target, as a result does.
+  @Test func anAnswerToATypedTurnOpensTheLine() async throws {
+    try await join(a, "Alpha")
+    await bridge.perform(.start)
+    try await sync(a, "Fix the build.")
+    #expect(await voice.opens.isEmpty)
+    try await sync(a, kind: .answer, "The build is fixed.")
+    #expect(await eventually { await voice.opens.count == 1 })
+    #expect(await !audio.calls.contains("chime"))
+    #expect(await bridge.status.unheard == 1)
+  }
+
+  /// An image sent alone reaches the app as a typed line with no words: nothing is kept of it, and
+  /// Claude's answer to it opens the line all the same.
+  @Test func anAnswerToAnImageAloneOpensTheLine() async throws {
+    try await join(a, "Alpha")
+    await bridge.perform(.start)
+    try await sync(a, turn: "turn-0", "Fix the build.")
+    try await sync(a, "")
+    #expect(await lines() == ["You: [TYPED] Alpha: Fix the build."])
+    try await sync(a, kind: .answer, "The screenshot shows a failed build.")
+    #expect(await eventually { await voice.opens.count == 1 })
+  }
+
+  /// On the open line about its session, Claude's answer to a typed turn is said at once.
+  @Test func anAnswerToATypedTurnIsSaidOnTheOpenLine() async throws {
+    await live()
+    await bridge.audioEvent(.speechEnded)
+    try await answerFirstRequest()  // the line awaits nothing of Alpha's now
+    try await sync(a, turn: "turn-2", "Fix the build.")
+    try await sync(a, turn: "turn-2", kind: .answer, "The build is fixed.")
+    #expect(
+      await eventually { await voice.spoken.last == "[CLAUDE] Alpha: The build is fixed." })
+  }
+
+  /// Claude's answer to a turn the owner typed nothing into (a peer's message, a background
+  /// report) stays context, even in the target.
+  @Test func anAnswerToATurnNobodyTypedStaysContext() async throws {
+    try await join(a, "Alpha")
+    await bridge.perform(.start)
+    try await sync(a, "Fix the build.")
+    try await sync(a, turn: "turn-2", kind: .start)
+    try await sync(a, turn: "turn-2", kind: .answer, "A peer session wrote; noted.")
+    #expect(await voice.opens.isEmpty)
+    #expect(await !audio.calls.contains("chime"))
+  }
+
+  /// An answer given at the keyboard to Claude's question is no prompt: the answer to a turn that
+  /// holds only that, such as another session's message, stays context.
+  @Test func anAnswerToATurnWithOnlyAKeyboardAnswerStaysContext() async throws {
+    try await join(a, "Alpha")
+    await bridge.perform(.start)
+    try await sync(a, turn: "turn-2", kind: .start)
+    try await sync(a, turn: "turn-2", prompt: false, "You answered at the keyboard: Yes")
+    try await sync(a, turn: "turn-2", kind: .answer, "The night work is lined up.")
+    #expect(await voice.opens.isEmpty)
+  }
+
+  /// Another session's answer to a typed turn stays context: it neither opens the line nor chimes.
+  @Test func anAnswerToATypedTurnOfAnotherSessionStaysContext() async throws {
+    try await join(a, "Alpha")
+    try await join(b, "Beta")
+    await bridge.perform(.start)
+    try await sync(b, "Fix Beta's build.")
+    try await sync(b, kind: .answer, "Beta's build is fixed.")
+    #expect(await voice.opens.isEmpty)
+    #expect(await !audio.calls.contains("chime"))
+    #expect(await bridge.status.unheard == 0)
+  }
+
   @Test func aLiveLineGetsASyncedLineAtOnce() async throws {
     await live()
     try await sync(a, "Fix the build.")
@@ -3452,15 +3524,20 @@ struct BridgeTests {
     #expect(await voice.opens.last?.isEmpty == true)
   }
 
+  /// What the owner types is added to the line; Claude's answers to it are said.
   @Test func aSyncedLineIsRedactedClippedAndCodeFree() async throws {
     await live()
-    try await sync(a, "My password: hunter2\n```\nlet secret = 1\n```\nthanks")
+    await bridge.audioEvent(.speechEnded)
+    try await answerFirstRequest()
+    try await sync(a, turn: "turn-2", "My password: hunter2\n```\nlet secret = 1\n```\nthanks")
     try await sync(
-      a, kind: .answer,
+      a, turn: "turn-2", kind: .answer,
       "Done. key sk-abcdefghijklmnopqrst\n```\nlet code = 1\n```\n| a | b |\n"
         + String(repeating: "More detail here. ", count: 300))
-    try await sync(a, kind: .answer, "```\nlet only = 1\n```")
-    let added = await voice.added
+    try await sync(a, turn: "turn-2", kind: .answer, "```\nlet only = 1\n```")
+    let claude = { await voice.spoken.filter { $0.hasPrefix("[CLAUDE]") } }
+    #expect(await eventually { await claude().count == 2 })
+    let added = await voice.added + claude()
     #expect(added.count == 3)
     for line in added {
       #expect(line.count <= AnswerShaper.maxCharacters && !line.contains("\n"))

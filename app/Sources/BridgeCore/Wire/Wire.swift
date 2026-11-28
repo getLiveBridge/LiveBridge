@@ -148,6 +148,9 @@ public struct SyncBody: Codable, Sendable, Equatable {
   public var turn: TurnRef
   public var kind: SyncKind
   public var text: String?
+  /// On a `typed` line: the owner typed it as a prompt, the turn's own or one typed into a
+  /// running turn. Absent on an answer given at the keyboard, and from an older mod.
+  public var prompt: Bool?
 }
 
 /// `POST /v1/leave`.

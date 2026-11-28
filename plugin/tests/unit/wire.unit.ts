@@ -86,6 +86,7 @@ const SHAPES: Record<string, Shape> = {
   'next': fields<Wire.PollReply>({ status: STATUS, work: optional(WORK) }),
   'sync': fields<Wire.SyncBody>({
     sessionId: S, turn: TURN, kind: { oneOf: ['start', 'typed', 'answer', 'report'] }, text: optional(S),
+    prompt: optional('boolean'),
   }),
   'target': fields<Wire.TargetBody>({ sessionId: S }),
 }

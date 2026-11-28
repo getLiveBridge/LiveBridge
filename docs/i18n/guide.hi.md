@@ -194,8 +194,14 @@ menu का **Quick Settings** इसके पाँच switches रखता �
   Prompt का जवाब आप Claude Code में देते हैं; LiveBridge उसका जवाब कभी आपकी जगह नहीं देता।
 - आप जो टाइप करते हैं, वह उसे दिया जाता है। session के जुड़े रहते, आप उसमें जो टाइप करते हैं और हर
   उस turn पर Claude का अंतिम जवाब जो voice अनुरोध नहीं था, उस session की voice के साथ conversation
-  में context के रूप में जाते हैं: उनके लिए chime नहीं बजता और वे बंद line नहीं खोलते ([इसकी
-  सीमाएँ](known-limitations.hi.md))। खुली line को वे तुरंत मिलते हैं; बाद में खुली line उनसे शुरू होती है। जिस
+  में context के रूप में जाते हैं ([इसकी सीमाएँ](known-limitations.hi.md))। आप जो टाइप करते हैं, उसके
+  लिए chime नहीं बजता और वह बंद line नहीं खोलता। आपके टाइप किए prompt पर Claude का जवाब,
+  target session में और call चालू रहते, नतीजे की तरह बोला जाता है: वह बंद line खोलता है, या उस
+  session के बारे में खुली line पर बोला जाता है; बिना ऐसे prompt वाले turn का जवाब, जैसे किसी
+  दूसरे session का संदेश, context ही रहता है, तब भी जब उस turn में आपने Claude के सवाल का जवाब
+  keyboard से दिया हो। कोई client आपके भेजे में जो
+  `<system-reminder>` blocks जोड़ता है, जैसे side sessions पर desktop app के notes, वे आपके शब्द नहीं
+  हैं और छोड़ दिए जाते हैं; अकेले भेजी गई image में रखने लायक कुछ नहीं बचता। खुली line को वे तुरंत मिलते हैं; बाद में खुली line उनसे शुरू होती है। जिस
   voice जवाब को नए अनुरोध ने हटा दिया, वह बोला नहीं जाता, पर रखा जाता है और उसी तरह जोड़ा जाता है।
   turn के बीच का Claude का text sync नहीं होता, सिवाय उसके जो उसने सवाल या permission prompt से ठीक
   पहले लिखा, वह उसी के साथ जाता है; subagents और tools का output भी sync नहीं होते। target में

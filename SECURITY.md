@@ -190,11 +190,9 @@ What the app does enforce is smaller. A line is cut to one line of at most 2,000
 you typed that was only code or a table becomes a sentence saying so (`AnswerShaper.synced`); and
 the redactor runs on it. The label `[TYPED]` is put on by the app when a mod says the line is
 yours. The mod says so for a prompt whose origin is `composer`, text typed into a running turn
-included, and for an answer to Claude's question that did not come by voice. That a prompt typed
-in the Claude desktop app arrives as `composer` is inferred from its transcripts and was not
-observed: if it arrives as `sdk`, nothing typed there is recorded, no gap is marked, and the pause
-reaches less ([known limitations](docs/known-limitations.md),
-[ADR 0001 (m)](docs/adr/0001-platform-findings.md)). A prompt of another origin, from another
+included, and for an answer to Claude's question that did not come by voice; a prompt typed in the
+Claude desktop app arrives as `composer` too ([ADR 0001 (m)](docs/adr/0001-platform-findings.md)).
+The `<system-reminder>` blocks a client appends to a prompt are left out of the line. A prompt of another origin, from another
 agent, a plugin, a schedule or a host, is not recorded as yours, though Claude's answer to it is.
 That `bridge` is Remote Control is the type's wording and was not observed; if it arrives as
 `composer` it is recorded as yours. "At the keyboard" in these lines is the mod's wording, not

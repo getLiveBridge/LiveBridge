@@ -29,11 +29,6 @@ les réglages nommés ici.
   sur 3, un compte et non un taux ([ADR 0001 (n)](../../docs/adr/0001-platform-findings.md)). Une ligne
   fermée ne s'ouvre pour elles que si la conversation de la cible contient un tour de vous ; sinon
   l'application joue un carillon, et appel éteint elles ne sont qu'enregistrées.
-- Ce que l'application de bureau Claude indique comme origine d'un prompt tapé n'a pas été observé
-  ([ADR 0001 (m)](../../docs/adr/0001-platform-findings.md)). Le mod n'enregistre un prompt comme vôtre
-  que si son origine est `composer`. Si un prompt tapé là-bas arrive autrement, rien de ce qui y est
-  tapé n'est enregistré, aucun trou n'est noté, le menu affiche **Context up to date**, et la pause
-  va moins loin ([détails](../../SECURITY.md#what-session-text-can-do)).
 - Un résultat qui arrive pendant que la ligne l'attend est transmis à la voix sous forme de texte à
   dire ; codex n'a aucun appel qui fasse parler la voix immédiatement, c'est donc le modèle qui
   décide du moment. Le test de bout en bout ([scripts/smoke.sh](../../scripts/smoke.sh)) vérifie que

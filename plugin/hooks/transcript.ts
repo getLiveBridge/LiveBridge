@@ -14,6 +14,12 @@ export const MESSAGE_CAP = 6_000
 export const FIRST_CAP = 4_000
 
 const REMINDER = /<system-reminder>[\s\S]*?<\/system-reminder>/g
+
+/**
+ * `text` without the reminders a client appends to a prompt or a message, which are not the
+ * person's words; '' when nothing else is there (an image sent alone).
+ */
+export const withoutReminders = (text: string): string => text.replace(REMINDER, '').trim()
 const SPEAKER = { user: 'User', assistant: 'Claude' } as const
 
 /** Whether `i` falls between the two halves of a surrogate pair: a cut there would split it. */
@@ -39,7 +45,7 @@ function wordsOf(message: TranscriptMessage): string {
   const blocks = typeof message.content === 'string' ? [{ type: 'text', text: message.content }] : message.content
   return blocks
     .map(block => {
-      if (block.type === 'text') return (block.text ?? '').replace(REMINDER, '').trim()
+      if (block.type === 'text') return withoutReminders(block.text ?? '')
       if (block.type === 'tool_use' && message.role === 'assistant') return `[used ${block.name ?? 'a tool'}]`
       return ''
     })

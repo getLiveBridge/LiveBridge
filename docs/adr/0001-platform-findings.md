@@ -458,6 +458,24 @@ voice's words:
   the service went on sending packets. Both lines were opened by speech: a line a result opened, with
   the owner silent, was not run, and how late the detector hears the voice start was not measured.
 
+**(t) No way to give an open line text the voice does not speak.** Read, 2026-11-28, in the source
+of `codex-cli 0.172.0` (`realtime_conversation.rs`, `methods_common.rs`,
+`methods_frameless_bidi.rs`, `protocol.rs`), after a call in which the voice said the plan the owner
+had asked for twice:
+
+- The GPT-Live wire (`FramelessBidi`) sends `session.context.append` on one of two channels,
+  `Speakable` or `Commentary`; codex's own comment says an omitted channel defaults to speakable.
+- `thread/realtime/appendText` takes only `threadId`, `text` and `role`, and codex sends it as
+  `session.context.append` with no channel, so every line the app appends is speakable. Codex sets
+  `Commentary` only on its own handoff output (the quiet reasoning status and the commentary handoff
+  mode); no app-server method lets a client choose it.
+- In the call, the owner asked by voice for the night plan again and the voice handed it off. While
+  that request waited, Claude's answer to an earlier turn about the same plan arrived as a `[CLAUDE]`
+  line, and the voice retold it unasked; 31 s later the request's `[RESULT]` came and was said as
+  well. One call: a count, not a rate.
+- So a synced line can make the voice speak, as item (o) found, and the app's only way to prevent
+  it is not to send the line.
+
 ### Claude Code mod API
 
 **(e) Session title.** Observed against the desktop app's own session list: for each of 5
@@ -575,10 +593,10 @@ notification, a returning background agent included), `scheduled-trigger`, `peer
 
 Observed, as in (i): a typed prompt is `composer`, and a host's message marked
 `origin: {kind: "human"}` reaches the mod as `composer` too; `human` never does, and a host's
-unmarked message is `sdk`. The desktop app was not observed: that its typed prompts arrive as
-`composer` is **inferred** from its transcripts, which stamp every text the owner typed `human`.
-One typed prompt in the desktop app, reading the mod's origin, would settle it; until then a prompt
-typed there may go unrecorded with no gap marked. That `bridge` is Remote Control is the type's own
+unmarked message is `sdk`. Observed in the desktop app on 2026-11-28: a prompt the owner sent there
+(an image, with the app's `<system-reminder>` blocks on side sessions appended to it) reached the
+mod as `composer` without `isMeta` and was posted as typed. The app appends such reminders to what
+the owner sends, so the mod leaves them out of the typed line, as the summary already did. That `bridge` is Remote Control is the type's own
 wording and was not observed either: if it arrives as `composer` it is recorded as the owner's. A slash command that expands into a prompt is `composer` with `command`
 and no `isMeta`; its `prompt.submit.text` is what was typed, its `turn.start.text` the wrapper
 (`<command-message>…`). A mod's own command fires `command.run` only.
@@ -694,8 +712,7 @@ band in the terminal.
   again; until then the owner gets a chime and an unheard count, not the result itself. The
   target's answer, question or approval notice now opens the line instead (decision of
   2026-11-04, below).
-- Not yet observed for conversation sync, and to be checked by hand: the origin of a prompt typed in
-  the desktop app (item m), Load context in the real menu (macOS refused accessibility to the
+- Not yet observed for conversation sync, and to be checked by hand: Load context in the real menu (macOS refused accessibility to the
   check), and a real Claude model on this branch (every Claude text so far was canned).
 - Not yet observed, and to be checked by hand in the desktop app before release: the microphone
   path with a granted permission (and whether it avoids the Local Network prompt), which events
@@ -749,7 +766,9 @@ What the owner types in a session, and Claude's answer, go into its open line as
 arrive; a closed line gets them as seed when it next opens, and is never opened for them. If the
 owner talks to the voice and types to Claude at once, the voice must not fall behind, and it may
 repeat what was typed. So the reactions in item (o) are accepted, and nothing waits for the owner's
-words.
+words. Noted on 2026-11-28, after item (t): codex offers no append the voice does not speak, so a
+synced line can still be said unasked, also when it repeats a result that is coming; the owner kept
+this decision.
 
 ## Decision: a result opens the closed line
 

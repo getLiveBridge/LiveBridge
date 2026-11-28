@@ -28,11 +28,6 @@ LiveBridge क्या नहीं करता, या केवल आंश
   (n)](../../docs/adr/0001-platform-findings.md))। बंद line इनके लिए तभी खुलती है जब target की
   conversation में आपका कोई turn हो; नहीं तो app chime बजाता है, और call बंद हो तो ये सिर्फ़ दर्ज
   होते हैं।
-- Claude desktop app टाइप किए गए prompt का origin क्या बताता है, यह देखा नहीं गया ([ADR 0001
-  (m)](../../docs/adr/0001-platform-findings.md))। mod किसी prompt को आपका तभी दर्ज करता है जब उसका origin
-  `composer` हो। अगर वहाँ टाइप किया prompt किसी और रूप में आए, तो वहाँ टाइप किया कुछ भी दर्ज नहीं
-  होता, कोई gap चिह्नित नहीं होता, menu **Context up to date** कहता है, और pause कम पहुँचता है
-  ([विवरण](../../SECURITY.md#what-session-text-can-do))।
 - जो नतीजा तब आता है जब line उसका इंतज़ार कर रही हो, वह voice को बोलने के लिए text के रूप में जाता
   है; codex में ऐसा कोई call नहीं है जो voice को तुरंत बुलवाए, इसलिए कब बोलना है यह model तय करता
   है। end-to-end smoke test ([scripts/smoke.sh](../../scripts/smoke.sh)) जाँचता है कि voice ऐसा नतीजा
