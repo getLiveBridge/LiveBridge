@@ -336,6 +336,26 @@ test('two prompts queued at once each find their own turn', () => {
   assert.deepEqual(tracker.turnStarted('t3', 'third', null, 2000).lines, [])
 })
 
+/** A client appends reminders to what the owner sends: the app gets the owner's words alone. */
+const REMINDERS = '<system-reminder>\nA session you started finished.\n</system-reminder>\n<system-reminder>Linked sessions now.</system-reminder>'
+
+test('a typed prompt reaches the app without the reminders a client appended', () => {
+  const tracker = new TurnTracker()
+  assert.deepEqual(tracker.turnStarted('t1', `Look at this.\n${REMINDERS}`, 'owner', 0).lines.at(-1), {
+    turn: { id: 't1' }, kind: 'typed', text: 'Look at this.',
+  })
+  assert.equal(tracker.turnStarted('t2', REMINDERS, 'owner', 1000).lines.at(-1)?.text, '', 'an image alone has no words')
+})
+
+test('a prompt typed into a turn reaches the app without reminders and is still claimed', () => {
+  const tracker = new TurnTracker()
+  tracker.turnStarted('t1', 'first', 'owner', 0)
+  const entered = `yes\n${REMINDERS}`
+  assert.deepEqual(tracker.typedInto('t1', entered), { turn: { id: 't1' }, kind: 'typed', text: 'yes' })
+  tracker.turnCompleted('t1', 'Done.', 'answer')
+  assert.deepEqual(tracker.turnStarted('t2', entered, null, 1000).lines, [], 'its own turn goes under t1')
+})
+
 /** A prompt typed while a tool runs folds in: no turn of its own will claim what was remembered. */
 test('a folded prompt leaves nothing remembered', () => {
   const tracker = new TurnTracker()

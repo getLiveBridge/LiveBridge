@@ -2,6 +2,7 @@
 // the other main-loop turns the app is sent. Pure: the hooks feed it `prompt.submit` origins and
 // the main loop's turn starts and ends.
 import { voiceRequestId } from './prompt.ts'
+import { withoutReminders } from './transcript.ts'
 import type { AnswerStatus, RequestId, SyncBody, TurnRef } from './wire.ts'
 
 /**
@@ -186,12 +187,13 @@ export class TurnTracker {
    * The owner typed `text` into running turn `turnId`, and it goes under that turn. The engine
    * does not say whether it folds in or gets a turn of its own later (ADR 0001, item m), so it is
    * remembered as `entered`, what a hook left of it and what that turn's start will hold, until a
-   * turn claims it.
+   * turn claims it. The line holds the owner's words only, without the reminders a client
+   * appended; with none it is still posted, as the pause decides on it.
    */
   typedInto(turnId: string, text: string, entered = text): SyncLine {
     const turn = refOf(this.#turn?.turnId === turnId ? this.#turn : { id: null, isVoice: false, turnId, linesUnder: turnId })
     this.#typed.push({ text: entered, turnId: turn.id })
-    return { turn, kind: 'typed', text }
+    return { turn, kind: 'typed', text: withoutReminders(text) }
   }
 
   /**
@@ -237,7 +239,7 @@ export class TurnTracker {
     }
     this.#followUp = null
     const lines = opened({ id: null, isVoice: false })
-    return origin === 'owner' ? [...lines, { turn: { id: turnId }, kind: 'typed', text: prompt }] : lines
+    return origin === 'owner' ? [...lines, { turn: { id: turnId }, kind: 'typed', text: withoutReminders(prompt) }] : lines
   }
 
   /**
