@@ -699,6 +699,88 @@ struct BridgeTests {
     #expect(try await eventually { try await registry.poll(a) == .request(expected) })
   }
 
+  /// The conversation keeps the order things were said in: the words said before a handoff show
+  /// above its task, and the line's final text adds only the words said after it.
+  @Test func wordsSaidBeforeAHandoffShowAboveItsTask() async throws {
+    await live()
+    voice.emit(.userSpeaking(" Check the build."))
+    voice.emit(.handoff(request(1)))
+    #expect(try await eventually { try await registry.poll(a) != nil })
+    voice.emit(.userSpeaking(" And the tests."))
+    voice.emit(.userUtterance("Check the build. And the tests."))
+    #expect(
+      await eventually {
+        await lines() == [
+          "You: Check the build.", "Task: Example request 1", "You: And the tests.",
+        ]
+      })
+  }
+
+  /// A line handed off twice adds, at each handoff and at its end, only the words since the last:
+  /// to the requests and to the conversation alike.
+  @Test func aLineHandedOffTwiceIsSaidOnce() async throws {
+    await live()
+    voice.emit(.userSpeaking(" Check the build."))
+    try await handOff(1, saying: ["Check the build."])
+    voice.emit(.userSpeaking(" And the tests."))
+    try await handOff(2, saying: ["And the tests."])
+    voice.emit(.userSpeaking(" And lint."))
+    voice.emit(.userUtterance("Check the build. And the tests. And lint."))
+    try await handOff(3, saying: ["And lint."])
+    #expect(
+      await spoken() == [
+        "You: Check the build.", "Task: Example request 1", "You: And the tests.",
+        "Task: Example request 2", "You: And lint.", "Task: Example request 3",
+      ])
+  }
+
+  /// The next sentence can start before the last one's final text: after a handoff its words stay
+  /// in the menu and reach the next request.
+  @Test func aSentenceStartedAfterAHandoffIsKept() async throws {
+    await live()
+    voice.emit(.userSpeaking(" A one."))
+    try await handOff(1, saying: ["A one."])
+    voice.emit(.userSpeaking(" B two"))
+    voice.emit(.userUtterance("A one."))
+    #expect(
+      await eventually {
+        await spoken() == ["You: A one.", "Task: Example request 1", "You: B two"]
+      })
+    try await handOff(2, saying: ["B two"])
+  }
+
+  /// A handoff can take the start of the next sentence with the last one: that sentence's final
+  /// text then adds only its words past that start.
+  @Test func aSentenceStartedBeforeAHandoffIsNotSaidAgain() async throws {
+    await live()
+    voice.emit(.userSpeaking(" A one."))
+    voice.emit(.userSpeaking(" B two"))
+    try await handOff(1, saying: ["A one. B two"])
+    voice.emit(.userUtterance("A one."))
+    voice.emit(.userSpeaking(" three."))
+    voice.emit(.userUtterance("B two three."))
+    try await handOff(2, saying: ["three."])
+    #expect(
+      await spoken() == [
+        "You: A one. B two", "Task: Example request 1", "You: three.", "Task: Example request 2",
+      ])
+  }
+
+  /// Hands off request `n`, checks that it reaches Alpha carrying `saying` as the owner's, and
+  /// answers it.
+  func handOff(_ n: Int, saying: [String]) async throws {
+    voice.emit(.handoff(request(n)))
+    var expected = request(n)
+    expected.transcript = saying.map { Utterance(role: .user, text: $0) }
+    #expect(try await eventually { try await registry.poll(a) == .request(expected) })
+    try await post(
+      "/v1/answer",
+      AnswerBody(sessionId: a, id: request(n).id, status: .ok, text: "Done.", reason: nil))
+  }
+
+  /// The menu's conversation without Claude's answers.
+  func spoken() async -> [String] { await lines().filter { !$0.hasPrefix("Claude:") } }
+
   /// While muted the owner cannot speak, so a handoff then is the voice's own, made from lines
   /// it was given: it reaches no session, and the voice is told it did not.
   @Test func aHandoffWhileMutedReachesNoSession() async throws {

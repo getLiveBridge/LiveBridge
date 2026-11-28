@@ -155,7 +155,7 @@ public actor Bridge: Router {
       summaries.keep(only: Set(status.sessions.map(\.sessionId)))
       return BridgeUpdate(
         status: status, problem: problem, minutesThisCall: minutes,
-        conversation: shown.shownLines + growing.lines,
+        conversation: shown.shownLines + speech.untaken(growing.lines),
         labelsOnAnOlderMod: olderMods, contextNeed: contextNeed,
         claudeLimits: claudeLimits, lastSummary: lastSummary,
         targetSummary: target.map { summaries.display(of: $0, in: continuity, at: time.now) }
@@ -681,7 +681,14 @@ public actor Bridge: Router {
       // lines it was given, which it reads as the owner's (ADR 0001 (b)). It reaches no session.
       let isMuted = machine.isMuted
       var request = request
-      if !isMuted { request.transcript = speech.handOff(with: growing.lines) }
+      if !isMuted {
+        // What was said since the last request shows above the task it led to; the menu and the
+        // line's final text leave it out from now on.
+        for line in speech.untaken(growing.lines) {
+          record(line.speaker, line.text, in: lineSession)
+        }
+        request.transcript = speech.handOff(with: growing.lines)
+      }
       let session = isMuted ? nil : await route(request)
       await send(.handedOff(session))
       if session == nil {
@@ -694,16 +701,14 @@ public actor Bridge: Router {
     case .userSpeaking(let words): growing.add(words, from: .owner)
     case .userUtterance(let text):
       growing.finish(.owner, with: text)
-      speech.finish(.owner, with: text)
-      record(.owner, text, in: lineSession)
+      record(.owner, speech.finish(.owner, with: text), in: lineSession)
       await send(.userTranscribed)
     case .assistantSpeaking(let words):
       growing.add(words, from: .voice)
       await send(.assistantSpeaking)
     case .assistantUtterance(let text):
       growing.finish(.voice, with: text)
-      speech.finish(.voice, with: text)
-      record(.voice, text, in: lineSession)
+      record(.voice, speech.finish(.voice, with: text), in: lineSession)
       await send(.assistantFinishedSpeaking(text))
     case .closed(let reason):
       connecting?.cancel()
