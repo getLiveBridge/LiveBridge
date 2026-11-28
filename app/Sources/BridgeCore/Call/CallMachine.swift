@@ -307,7 +307,7 @@ public struct CallMachine: Sendable {
       // a result the voice never speaks still hangs up
       let isAwaited = result.session.map(awaited.contains) ?? false
       let sound = arrival(of: result)
-      guard isAwaited || (onOwnLine && [.asking, .approval].contains(result.kind)) else {
+      guard isAwaited || (onOwnLine && [.claude, .asking, .approval].contains(result.kind)) else {
         unheard.append(Unheard(line: result))
         return sound + [.addContext(result), armSilence()]
       }

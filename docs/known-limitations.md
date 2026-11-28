@@ -26,11 +26,6 @@ settings named here.
   0 of 3 runs, a count and not a rate ([ADR 0001 (n)](adr/0001-platform-findings.md)). A closed
   line opens for either only when the target's conversation holds a turn of yours; otherwise the app
   chimes, and with the call off it is only recorded.
-- What the Claude desktop app reports as a typed prompt's origin was not observed ([ADR 0001
-  (m)](adr/0001-platform-findings.md)). The mod records a prompt as yours only when its origin
-  is `composer`. If a prompt typed there arrives as anything else, nothing typed there is recorded,
-  no gap is marked, the menu says **Context up to date**, and the pause reaches less
-  ([details](../SECURITY.md#what-session-text-can-do)).
 - A result that arrives while the line waits for it goes to the voice as text to say; codex has no
   call that makes the voice speak at once, so the model decides when. The end-to-end smoke test
   ([scripts/smoke.sh](../scripts/smoke.sh)) checks that the voice says such a result before your

@@ -730,11 +730,12 @@ public actor Bridge: Router {
         onOwnLine: lineKnowsSession && lineSession == line.session))
   }
 
-  /// Whether `line` opens a closed line: an answer, a question or an approval notice from the
-  /// target, whose conversation holds a turn of the owner's. A line seeded without one stays
-  /// silent (ADR 0001 (b), (n)); an update chimes.
+  /// Whether `line` opens a closed line: an answer, Claude's answer to a typed turn, a question or
+  /// an approval notice from the target, whose conversation holds a turn of the owner's. A line
+  /// seeded without one stays silent (ADR 0001 (b), (n)); an update chimes.
   private func opensLine(_ line: VoiceLine) async -> Bool {
-    guard let session = line.session, line.kind.answers || [.asking, .approval].contains(line.kind)
+    guard let session = line.session,
+      line.kind.answers || [.claude, .asking, .approval].contains(line.kind)
     else { return false }
     let target = await registry.target
     return session == target && continuity[session].lines.contains { $0.speaker == .owner }
@@ -957,14 +958,23 @@ public actor Bridge: Router {
 
   /// A line of a turn. It is kept in its session's conversation if `Continuity.admits` takes it
   /// (the pause setting with the call off refuses it, and marks the session paused); the open line
-  /// about that session is given it at once, as context. A `typed` line refused in a turn with a
-  /// voice request behind it withholds exactly that request.
+  /// about that session is given it at once, as context. Claude's answer to a turn the owner
+  /// typed into, in the target while the call is on, is said as a result is instead: it opens a
+  /// closed line. A
+  /// `typed` line refused in a turn with a voice request behind it withholds exactly that request.
   private func sync(_ body: SyncBody) async throws {
     let id = body.sessionId
     let row = try await label(of: id)
     let admitted = continuity.admits(turn: body.turn, kind: body.kind, in: id, pausing: pausing)
     if !admitted, body.kind == .typed, let request = body.turn.request {
       await registry.withholdAnswer(request, of: id)
+    }
+    if admitted, body.kind == .answer, continuity.isTyped(body.turn, in: id),
+      machine.phase != .off, await registry.target == id,
+      let line = AnswerShaper.synced(body.text ?? "", kind: .answer, label: row.label, session: id)
+    {
+      summaries.turnArrived(in: id)
+      return await say(line)
     }
     guard admitted, await addSynced(body.text ?? "", kind: body.kind, of: row) else {
       save()  // the turn's decision persists, a `start`'s included

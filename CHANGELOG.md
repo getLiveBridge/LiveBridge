@@ -4,6 +4,20 @@ All notable changes to this project are listed here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow
 [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Changed
+
+- Claude's answer to something you typed or pasted into the target session is said as a result is,
+  while the call is on: it opens a closed line, or is said on the open line. Before, it went to the
+  voice only as context, with no chime and no notice. What you type still opens nothing, and the
+  answer to a turn you did not type into, such as another session's message, stays context.
+
+### Fixed
+
+- The `<system-reminder>` blocks the Claude desktop app appends to what you send (its notes on side
+  sessions, with their ids and reports) no longer reach the voice as your words.
+
 ## [0.6.6]
 
 ### Fixed

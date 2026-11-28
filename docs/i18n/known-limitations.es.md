@@ -29,11 +29,6 @@ ajustes que se nombran aquí.
   (n)](../../docs/adr/0001-platform-findings.md)). Una línea cerrada se abre para ellas solo si la
   conversación del destino tiene un turno tuyo; si no, la aplicación suena un timbre, y con la
   llamada apagada solo se registra.
-- No se ha observado qué informa la aplicación de escritorio de Claude como origen de un prompt
-  escrito ([ADR 0001 (m)](../../docs/adr/0001-platform-findings.md)). El mod registra un prompt como tuyo
-  solo si su origen es `composer`. Si un prompt escrito allí llega de otra forma, nada de lo escrito
-  allí se registra, no se marca ningún hueco, el menú dice **Context up to date** y la pausa alcanza
-  menos ([detalles](../../SECURITY.md#what-session-text-can-do)).
 - Un resultado que llega mientras la línea lo espera pasa a la voz como texto para decir; codex no
   tiene ninguna llamada que haga hablar a la voz de inmediato, así que el modelo decide cuándo. La
   prueba de humo de extremo a extremo ([scripts/smoke.sh](../../scripts/smoke.sh)) comprueba que la

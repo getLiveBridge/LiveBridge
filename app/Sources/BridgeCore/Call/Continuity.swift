@@ -76,6 +76,9 @@ public struct Conversation: Codable, Sendable, Equatable {
   struct TurnDecision: Codable, Sendable, Equatable {
     var id: String
     var admitted: Bool
+    /// The owner typed into the turn, so Claude's answer is to them. Absent: they did not, or the
+    /// file was saved before the field existed.
+    var isTyped: Bool?
   }
 
   struct SummaryAsk: Codable, Sendable, Equatable {
@@ -206,15 +209,22 @@ public struct Continuity: Codable, Sendable, Equatable {
     turn: TurnRef, kind: SyncKind, in id: SessionID, pausing: Bool
   ) -> Bool {
     use(id) { conversation in
-      let decided = conversation.turn.flatMap { $0.id == turn.id ? $0.admitted : nil }
+      let previous = conversation.turn.flatMap { $0.id == turn.id ? $0 : nil }
       let isClaudes = kind == .answer || kind == .report
       let isUnseen = isClaudes && conversation.outOfSync == .paused
       let first = turn.request != nil || !(pausing || isUnseen)
-      let admitted = (decided ?? first) && !(kind == .typed && pausing)
-      conversation.turn = Conversation.TurnDecision(id: turn.id, admitted: admitted)
+      let admitted = (previous?.admitted ?? first) && !(kind == .typed && pausing)
+      let isTyped = kind == .typed || previous?.isTyped == true
+      conversation.turn = Conversation.TurnDecision(
+        id: turn.id, admitted: admitted, isTyped: isTyped ? true : nil)
       if !admitted { conversation.markPaused() }
       return admitted
     }
+  }
+
+  /// Whether the owner typed into `turn`, the turn of the session's lines last offered.
+  public func isTyped(_ turn: TurnRef, in id: SessionID) -> Bool {
+    self[id].turn.map { $0.id == turn.id && $0.isTyped == true } ?? false
   }
 
   /// A turn of the session did not arrive. `asPaused`: the pause setting is on, so the gap may

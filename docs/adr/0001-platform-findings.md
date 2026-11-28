@@ -575,10 +575,10 @@ notification, a returning background agent included), `scheduled-trigger`, `peer
 
 Observed, as in (i): a typed prompt is `composer`, and a host's message marked
 `origin: {kind: "human"}` reaches the mod as `composer` too; `human` never does, and a host's
-unmarked message is `sdk`. The desktop app was not observed: that its typed prompts arrive as
-`composer` is **inferred** from its transcripts, which stamp every text the owner typed `human`.
-One typed prompt in the desktop app, reading the mod's origin, would settle it; until then a prompt
-typed there may go unrecorded with no gap marked. That `bridge` is Remote Control is the type's own
+unmarked message is `sdk`. Observed in the desktop app on 2026-11-28: a prompt the owner sent there
+(an image, with the app's `<system-reminder>` blocks on side sessions appended to it) reached the
+mod as `composer` without `isMeta` and was posted as typed. The app appends such reminders to what
+the owner sends, so the mod leaves them out of the typed line, as the summary already did. That `bridge` is Remote Control is the type's own
 wording and was not observed either: if it arrives as `composer` it is recorded as the owner's. A slash command that expands into a prompt is `composer` with `command`
 and no `isMeta`; its `prompt.submit.text` is what was typed, its `turn.start.text` the wrapper
 (`<command-message>…`). A mod's own command fires `command.run` only.
@@ -694,8 +694,7 @@ band in the terminal.
   again; until then the owner gets a chime and an unheard count, not the result itself. The
   target's answer, question or approval notice now opens the line instead (decision of
   2026-11-04, below).
-- Not yet observed for conversation sync, and to be checked by hand: the origin of a prompt typed in
-  the desktop app (item m), Load context in the real menu (macOS refused accessibility to the
+- Not yet observed for conversation sync, and to be checked by hand: Load context in the real menu (macOS refused accessibility to the
   check), and a real Claude model on this branch (every Claude text so far was canned).
 - Not yet observed, and to be checked by hand in the desktop app before release: the microphone
   path with a granted permission (and whether it avoids the Local Network prompt), which events

@@ -214,8 +214,14 @@ se connecte :
   Claude Code ; LiveBridge n'y répond jamais à votre place.
 - Elle reçoit ce que vous tapez. Tant qu'une session est rejointe, ce que vous y tapez et la réponse
   finale de Claude à chaque tour qui n'était pas une demande vocale vont dans la conversation de
-  cette session avec la voix, comme contexte : ils ne font pas sonner de carillon et n'ouvrent pas
-  une ligne fermée ([les limites de ceci](known-limitations.fr.md)). Une ligne ouverte les reçoit
+  cette session avec la voix, comme contexte ([les limites de ceci](known-limitations.fr.md)). Ce que
+  vous tapez ne fait pas sonner de carillon et n'ouvre pas une ligne fermée. La réponse de Claude à un
+  tour où vous avez tapé, dans la session cible et pendant l'appel, est dite comme un résultat : elle
+  ouvre une ligne fermée, ou elle est dite sur la ligne ouverte sur cette session ; la réponse à un
+  tour où vous n'avez rien tapé, comme le message d'une autre session, reste du contexte. Les blocs
+  `<system-reminder>` qu'un client ajoute à ce que vous envoyez, comme les notes de l'application de
+  bureau sur les sessions annexes, ne sont pas vos mots et sont retirés ; une image envoyée seule ne
+  laisse rien à garder. Une ligne ouverte les reçoit
   aussitôt ; une ligne ouverte plus tard en est alimentée. Une réponse vocale qu'une demande plus
   récente a supplantée n'est pas dite, mais elle est gardée et ajoutée de la même façon. Le texte de
   Claude en milieu de tour n'est pas synchronisé, sauf ce qu'il a écrit juste avant une question ou
