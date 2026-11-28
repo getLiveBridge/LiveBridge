@@ -681,7 +681,12 @@ public actor Bridge: Router {
       // lines it was given, which it reads as the owner's (ADR 0001 (b)). It reaches no session.
       let isMuted = machine.isMuted
       var request = request
-      if !isMuted { request.transcript = speech.handOff(with: growing.lines) }
+      if !isMuted {
+        request.transcript = speech.handOff(with: growing.lines)
+        // What was said so far shows above the task it led to; a line's final text adds the rest.
+        for line in growing.lines { record(line.speaker, line.text, in: lineSession) }
+        growing = GrowingLines()
+      }
       let session = isMuted ? nil : await route(request)
       await send(.handedOff(session))
       if session == nil {
@@ -694,16 +699,14 @@ public actor Bridge: Router {
     case .userSpeaking(let words): growing.add(words, from: .owner)
     case .userUtterance(let text):
       growing.finish(.owner, with: text)
-      speech.finish(.owner, with: text)
-      record(.owner, text, in: lineSession)
+      record(.owner, speech.finish(.owner, with: text), in: lineSession)
       await send(.userTranscribed)
     case .assistantSpeaking(let words):
       growing.add(words, from: .voice)
       await send(.assistantSpeaking)
     case .assistantUtterance(let text):
       growing.finish(.voice, with: text)
-      speech.finish(.voice, with: text)
-      record(.voice, text, in: lineSession)
+      record(.voice, speech.finish(.voice, with: text), in: lineSession)
       await send(.assistantFinishedSpeaking(text))
     case .closed(let reason):
       connecting?.cancel()

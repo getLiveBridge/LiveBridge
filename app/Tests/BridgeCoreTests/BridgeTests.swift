@@ -699,6 +699,23 @@ struct BridgeTests {
     #expect(try await eventually { try await registry.poll(a) == .request(expected) })
   }
 
+  /// The conversation keeps the order things were said in: the words said before a handoff show
+  /// above its task, and the line's final text adds only the words said after it.
+  @Test func wordsSaidBeforeAHandoffShowAboveItsTask() async throws {
+    await live()
+    voice.emit(.userSpeaking(" Check the build."))
+    voice.emit(.handoff(request(1)))
+    #expect(try await eventually { try await registry.poll(a) != nil })
+    voice.emit(.userSpeaking(" And the tests."))
+    voice.emit(.userUtterance("Check the build. And the tests."))
+    #expect(
+      await eventually {
+        await lines() == [
+          "You: Check the build.", "Task: Example request 1", "You: And the tests.",
+        ]
+      })
+  }
+
   /// While muted the owner cannot speak, so a handoff then is the voice's own, made from lines
   /// it was given: it reaches no session, and the voice is told it did not.
   @Test func aHandoffWhileMutedReachesNoSession() async throws {

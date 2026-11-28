@@ -10,9 +10,10 @@ struct HandoffSpeech: Sendable {
 
   /// `speaker`'s line ended as `text`. A line a request took part of adds only its words past
   /// that part; a final text that does not start with it is kept whole, as nothing tells the two
-  /// apart.
-  mutating func finish(_ speaker: Conversation.Line.Speaker, with text: String) {
-    guard let role = speaker.role else { return }
+  /// apart. Returns the words the line adds.
+  @discardableResult
+  mutating func finish(_ speaker: Conversation.Line.Speaker, with text: String) -> String {
+    guard let role = speaker.role else { return text }
     var rest = Substring(text)
     if let part = taken.removeValue(forKey: role) {
       if text.hasPrefix(part) {
@@ -23,6 +24,7 @@ struct HandoffSpeech: Sendable {
     }
     let words = rest.trimmingCharacters(in: .whitespaces)
     if !words.isEmpty { said.append(Utterance(role: role, text: words)) }
+    return words
   }
 
   /// The speech for a request: the finished lines, then the lines still being said
