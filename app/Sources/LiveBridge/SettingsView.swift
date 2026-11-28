@@ -411,8 +411,12 @@ final class SettingsWindow {
       }
       placed = true
     }
+    // macOS may refuse to activate a menu bar app, and a window an inactive app orders front
+    // stays beneath the active app's windows. So the window is raised whether or not the
+    // activation happens, and becomes key once it does or once it is clicked.
     NSApp.activate()
     window.makeKeyAndOrderFront(nil)
+    window.orderFrontRegardless()
   }
 }
 

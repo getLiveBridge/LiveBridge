@@ -4,6 +4,14 @@ All notable changes to this project are listed here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow
 [Semantic Versioning](https://semver.org/).
 
+## [0.6.6]
+
+### Fixed
+
+- Settings opens in front of other apps' windows. When macOS did not bring LiveBridge to the
+  front, the Settings window opened beneath the app you were in, so choosing Settings seemed
+  to do nothing.
+
 ## [0.6.5]
 
 ### Fixed
