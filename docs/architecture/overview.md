@@ -88,8 +88,9 @@ microphone or Claude:
   covers from here, and words past it stay as the start of that speaker's next line: the owner's
   next sentence can start seconds before the last one's final text. A delta names only a role, so
   words that do not match the final text cannot be told apart and all go, until that speaker's next
-  words. Growing words are never saved and never seed the voice, and any close of the line ends
-  them, so a line that closes before its final text leaves nothing. A reply cut off with no final
+  words. Growing words are saved only when a handoff takes them (`HandoffSpeech`), and any close
+  of the line ends them, so a line that closes before its final text leaves only what a handoff
+  took. A reply cut off with no final
   text, if codex does that, would stay below the owner's line and join the next reply until a final
   text. So the menu is as late as codex's deltas, not its final text
   ([ADR 0001 (r)](../adr/0001-platform-findings.md)).
@@ -97,9 +98,10 @@ microphone or Claude:
   in the next request's transcript: every finished line, then the lines still being said. codex's
   own `active_transcript` leaves out lines it moved into its thread past 4 KiB
   ([ADR 0001 (b)](../adr/0001-platform-findings.md)), so it is not read. A line a request took
-  midway adds only its words past that part when it ends. The conversation follows the same
-  split: a handoff writes the words said so far above its task, and the line's end adds the rest.
-  A muted handoff takes nothing; a new call starts empty.
+  midway adds only its words past that part when it ends, however many handoffs took parts of it.
+  The conversation and the menu follow the same split: a handoff writes the words said since the
+  last one above its task, and from then on the menu's growing line and the line's end leave them
+  out. A muted handoff takes nothing; a new call starts empty.
 - `RealtimeSession`: one ephemeral, read-only codex thread per realtime session; it refuses to go
   on unless codex reports every MCP server disabled, interrupts every codex turn and declines
   every request codex sends.

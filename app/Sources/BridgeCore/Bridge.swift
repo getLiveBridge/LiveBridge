@@ -155,7 +155,7 @@ public actor Bridge: Router {
       summaries.keep(only: Set(status.sessions.map(\.sessionId)))
       return BridgeUpdate(
         status: status, problem: problem, minutesThisCall: minutes,
-        conversation: shown.shownLines + growing.lines,
+        conversation: shown.shownLines + speech.untaken(growing.lines),
         labelsOnAnOlderMod: olderMods, contextNeed: contextNeed,
         claudeLimits: claudeLimits, lastSummary: lastSummary,
         targetSummary: target.map { summaries.display(of: $0, in: continuity, at: time.now) }
@@ -682,10 +682,12 @@ public actor Bridge: Router {
       let isMuted = machine.isMuted
       var request = request
       if !isMuted {
+        // What was said since the last request shows above the task it led to; the menu and the
+        // line's final text leave it out from now on.
+        for line in speech.untaken(growing.lines) {
+          record(line.speaker, line.text, in: lineSession)
+        }
         request.transcript = speech.handOff(with: growing.lines)
-        // What was said so far shows above the task it led to; a line's final text adds the rest.
-        for line in growing.lines { record(line.speaker, line.text, in: lineSession) }
-        growing = GrowingLines()
       }
       let session = isMuted ? nil : await route(request)
       await send(.handedOff(session))
