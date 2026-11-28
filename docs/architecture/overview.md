@@ -97,8 +97,9 @@ microphone or Claude:
   in the next request's transcript: every finished line, then the lines still being said. codex's
   own `active_transcript` leaves out lines it moved into its thread past 4 KiB
   ([ADR 0001 (b)](../adr/0001-platform-findings.md)), so it is not read. A line a request took
-  midway adds only its words past that part when it ends. A muted handoff takes nothing; a new
-  call starts empty.
+  midway adds only its words past that part when it ends. The conversation follows the same
+  split: a handoff writes the words said so far above its task, and the line's end adds the rest.
+  A muted handoff takes nothing; a new call starts empty.
 - `RealtimeSession`: one ephemeral, read-only codex thread per realtime session; it refuses to go
   on unless codex reports every MCP server disabled, interrupts every codex turn and declines
   every request codex sends.

@@ -4,6 +4,14 @@ All notable changes to this project are listed here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow
 [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Fixed
+
+- The conversation shows the words you said before a handoff above its Task line. A line you
+  were still saying when the voice handed off was written only when it ended, so it showed
+  below the task it led to.
+
 ## [0.6.6]
 
 ### Fixed
