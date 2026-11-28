@@ -76,9 +76,9 @@ public struct Conversation: Codable, Sendable, Equatable {
   struct TurnDecision: Codable, Sendable, Equatable {
     var id: String
     var admitted: Bool
-    /// The owner typed into the turn, so Claude's answer is to them. Absent: they did not, or the
-    /// file was saved before the field existed.
-    var isTyped: Bool?
+    /// The owner typed a prompt into the turn (`SyncBody.prompt`), so Claude's answer is to them.
+    /// Absent: they did not, or the file was saved before the field existed.
+    var isPrompted: Bool?
   }
 
   struct SummaryAsk: Codable, Sendable, Equatable {
@@ -205,8 +205,9 @@ public struct Continuity: Codable, Sendable, Equatable {
   /// Claude's that opens a turn in a `paused` session stays out: the turn's `start` never arrived,
   /// and its prompt may be the paused text.
   /// `pausing`: the pause setting is on and the call is off. Every refused line marks `paused`.
+  /// `isPrompt`: a `typed` line the owner typed as a prompt.
   public mutating func admits(
-    turn: TurnRef, kind: SyncKind, in id: SessionID, pausing: Bool
+    turn: TurnRef, kind: SyncKind, isPrompt: Bool = false, in id: SessionID, pausing: Bool
   ) -> Bool {
     use(id) { conversation in
       let previous = conversation.turn.flatMap { $0.id == turn.id ? $0 : nil }
@@ -214,17 +215,17 @@ public struct Continuity: Codable, Sendable, Equatable {
       let isUnseen = isClaudes && conversation.outOfSync == .paused
       let first = turn.request != nil || !(pausing || isUnseen)
       let admitted = (previous?.admitted ?? first) && !(kind == .typed && pausing)
-      let isTyped = kind == .typed || previous?.isTyped == true
+      let isPrompted = (kind == .typed && isPrompt) || previous?.isPrompted == true
       conversation.turn = Conversation.TurnDecision(
-        id: turn.id, admitted: admitted, isTyped: isTyped ? true : nil)
+        id: turn.id, admitted: admitted, isPrompted: isPrompted ? true : nil)
       if !admitted { conversation.markPaused() }
       return admitted
     }
   }
 
-  /// Whether the owner typed into `turn`, the turn of the session's lines last offered.
-  public func isTyped(_ turn: TurnRef, in id: SessionID) -> Bool {
-    self[id].turn.map { $0.id == turn.id && $0.isTyped == true } ?? false
+  /// Whether the owner typed a prompt into `turn`, the turn of the session's lines last offered.
+  public func isPrompted(_ turn: TurnRef, in id: SessionID) -> Bool {
+    self[id].turn.map { $0.id == turn.id && $0.isPrompted == true } ?? false
   }
 
   /// A turn of the session did not arrive. `asPaused`: the pause setting is on, so the gap may

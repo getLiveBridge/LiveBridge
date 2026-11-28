@@ -81,10 +81,12 @@ export type TurnRef = { id: string; request?: RequestId };
 /**
  * `start`: a turn's first word, which takes the turn's decision and records nothing; the only kind
  * with no `text`. `typed`: the owner's words, the only kind that refuses a turn. `answer`: Claude's
- * final answer. `report`: the mod's own line, which goes as Claude's.
+ * final answer. `report`: the mod's own line, which goes as Claude's. `prompt`, on a `typed` line
+ * only: the owner typed it as a prompt (the turn's own, or one typed into a running turn); absent
+ * on an answer given at the keyboard. Claude's answer to a turn with a prompt is the owner's to hear.
  */
 export type SyncKind = 'start' | 'typed' | 'answer' | 'report';
-export type SyncBody = { sessionId: SessionId; turn: TurnRef; kind: SyncKind; text?: string };
+export type SyncBody = { sessionId: SessionId; turn: TurnRef; kind: SyncKind; text?: string; prompt?: true };
 export type LeaveBody = { sessionId: SessionId };
 export type TargetBody = { sessionId: SessionId };
 

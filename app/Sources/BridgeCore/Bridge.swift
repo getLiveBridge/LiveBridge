@@ -958,18 +958,19 @@ public actor Bridge: Router {
 
   /// A line of a turn. It is kept in its session's conversation if `Continuity.admits` takes it
   /// (the pause setting with the call off refuses it, and marks the session paused); the open line
-  /// about that session is given it at once, as context. Claude's answer to a turn the owner
-  /// typed into, in the target while the call is on, is said as a result is instead: it opens a
-  /// closed line. A
+  /// about that session is given it as context. Claude's answer to a turn the owner typed a prompt
+  /// into, in the target while the call is on, is said as a result is instead: it opens a closed
+  /// line. A
   /// `typed` line refused in a turn with a voice request behind it withholds exactly that request.
   private func sync(_ body: SyncBody) async throws {
     let id = body.sessionId
     let row = try await label(of: id)
-    let admitted = continuity.admits(turn: body.turn, kind: body.kind, in: id, pausing: pausing)
+    let admitted = continuity.admits(
+      turn: body.turn, kind: body.kind, isPrompt: body.prompt == true, in: id, pausing: pausing)
     if !admitted, body.kind == .typed, let request = body.turn.request {
       await registry.withholdAnswer(request, of: id)
     }
-    if admitted, body.kind == .answer, continuity.isTyped(body.turn, in: id),
+    if admitted, body.kind == .answer, continuity.isPrompted(body.turn, in: id),
       machine.phase != .off, await registry.target == id,
       let line = AnswerShaper.synced(body.text ?? "", kind: .answer, label: row.label, session: id)
     {

@@ -193,7 +193,7 @@ export class TurnTracker {
   typedInto(turnId: string, text: string, entered = text): SyncLine {
     const turn = refOf(this.#turn?.turnId === turnId ? this.#turn : { id: null, isVoice: false, turnId, linesUnder: turnId })
     this.#typed.push({ text: entered, turnId: turn.id })
-    return { turn, kind: 'typed', text: withoutReminders(text) }
+    return { turn, kind: 'typed', text: withoutReminders(text), prompt: true }
   }
 
   /**
@@ -239,7 +239,7 @@ export class TurnTracker {
     }
     this.#followUp = null
     const lines = opened({ id: null, isVoice: false })
-    return origin === 'owner' ? [...lines, { turn: { id: turnId }, kind: 'typed', text: withoutReminders(prompt) }] : lines
+    return origin === 'owner' ? [...lines, { turn: { id: turnId }, kind: 'typed', text: withoutReminders(prompt), prompt: true }] : lines
   }
 
   /**

@@ -205,10 +205,11 @@ depuración:
 - Recibe lo que escribes. Mientras una sesión está unida, lo que escribes en ella y la respuesta
   final de Claude a cada turno que no fue una petición por voz pasan a la conversación de esa sesión
   con la voz como contexto ([los límites de esto](known-limitations.es.md)). Lo que escribes no hace
-  sonar ningún aviso ni abre una línea cerrada. La respuesta de Claude a un turno en el que
+  sonar ningún aviso ni abre una línea cerrada. La respuesta de Claude a un prompt que
   escribiste, en la sesión objetivo y con la llamada en marcha, se dice como un resultado: abre una
-  línea cerrada o se dice en la línea abierta sobre esa sesión; la respuesta a un turno en el que no
-  escribiste, como el mensaje de otra sesión, sigue siendo contexto. Los bloques
+  línea cerrada o se dice en la línea abierta sobre esa sesión; la respuesta a un turno sin él, como
+  el mensaje de otra sesión, sigue siendo contexto, también si en él respondiste con el teclado a
+  una pregunta de Claude. Los bloques
   `<system-reminder>` que un cliente añade a lo que envías, como las notas de la aplicación de
   escritorio sobre sesiones secundarias, no son tus palabras y se omiten; una imagen enviada sola no
   deja nada que guardar. Una línea abierta los recibe de inmediato; una línea que se

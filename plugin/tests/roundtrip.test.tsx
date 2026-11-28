@@ -925,7 +925,7 @@ async function joined($: Engine, world: ReturnType<typeof fakeWorld>) {
   world.take('join')
 }
 
-const owner = (id: string, text: string) => ({ sessionId: ID, turn: { id }, kind: 'typed', text })
+const owner = (id: string, text: string) => ({ sessionId: ID, turn: { id }, kind: 'typed', text, prompt: true })
 const claude = (id: string, text: string) => ({ sessionId: ID, turn: { id }, kind: 'answer', text })
 const start = (id: string) => ({ sessionId: ID, turn: { id }, kind: 'start' })
 

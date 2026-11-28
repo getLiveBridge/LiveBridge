@@ -195,10 +195,10 @@ the switch here asks.
 - It is given what you type. While a session is joined, what you type in it and Claude's final
   answer to each turn that was not a voice request go into that session's conversation with the
   voice, as context ([the limits on this](known-limitations.md)). What you type never chimes and
-  does not open a closed line. Claude's answer to a turn you typed into, in the target while the
-  call is on, is said as a result is: it opens a closed line, or is said on the line open about that
-  session; the answer to a turn you did not type into, such as another session's message, stays
-  context. The `<system-reminder>` blocks a client appends to what you send, such as the desktop
+  does not open a closed line. Claude's answer to a prompt you typed, in the target while the call
+  is on, is said as a result is: it opens a closed line, or is said on the line open about that
+  session; the answer to a turn without one, such as another session's message, stays context, also
+  when you answered a question of Claude's in it at the keyboard. The `<system-reminder>` blocks a client appends to what you send, such as the desktop
   app's notes on side sessions, are not your words and are left out; an image sent alone leaves
   nothing to keep. A line that is open gets them at once; a line opened later is seeded
   with them. A voice answer that a newer request superseded is not said but is kept and added the

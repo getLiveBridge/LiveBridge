@@ -216,9 +216,10 @@ se connecte :
   finale de Claude à chaque tour qui n'était pas une demande vocale vont dans la conversation de
   cette session avec la voix, comme contexte ([les limites de ceci](known-limitations.fr.md)). Ce que
   vous tapez ne fait pas sonner de carillon et n'ouvre pas une ligne fermée. La réponse de Claude à un
-  tour où vous avez tapé, dans la session cible et pendant l'appel, est dite comme un résultat : elle
-  ouvre une ligne fermée, ou elle est dite sur la ligne ouverte sur cette session ; la réponse à un
-  tour où vous n'avez rien tapé, comme le message d'une autre session, reste du contexte. Les blocs
+  prompt que vous avez tapé, dans la session cible et pendant l'appel, est dite comme un résultat :
+  elle ouvre une ligne fermée, ou elle est dite sur la ligne ouverte sur cette session ; la réponse à
+  un tour sans prompt, comme le message d'une autre session, reste du contexte, même si vous y avez
+  répondu au clavier à une question de Claude. Les blocs
   `<system-reminder>` qu'un client ajoute à ce que vous envoyez, comme les notes de l'application de
   bureau sur les sessions annexes, ne sont pas vos mots et sont retirés ; une image envoyée seule ne
   laisse rien à garder. Une ligne ouverte les reçoit

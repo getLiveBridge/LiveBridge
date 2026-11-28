@@ -8,10 +8,11 @@ All notable changes to this project are listed here. The format follows
 
 ### Changed
 
-- Claude's answer to something you typed or pasted into the target session is said as a result is,
+- Claude's answer to a prompt you typed or pasted into the target session is said as a result is,
   while the call is on: it opens a closed line, or is said on the open line. Before, it went to the
   voice only as context, with no chime and no notice. What you type still opens nothing, and the
-  answer to a turn you did not type into, such as another session's message, stays context.
+  answer to a turn without your prompt, such as another session's message, stays context, also when
+  you answered a question of Claude's in it at the keyboard.
 
 ### Fixed
 

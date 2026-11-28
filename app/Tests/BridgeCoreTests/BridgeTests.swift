@@ -239,16 +239,17 @@ struct BridgeTests {
 
   func setPause(_ on: Bool) { pause.withLock { $0 = on } }
 
-  /// A line of a turn, as the mod posts it.
+  /// A line of a turn, as the mod posts it; a `typed` line is a prompt unless `prompt` says not.
   @discardableResult
   func sync(
     _ id: SessionID, turn: String = "turn-1", request: RequestID? = nil, kind: SyncKind = .typed,
-    _ text: String? = nil
+    prompt: Bool = true, _ text: String? = nil
   ) async throws -> HTTPResponse {
     try await post(
       "/v1/sync",
       SyncBody(
-        sessionId: id, turn: TurnRef(id: turn, request: request), kind: kind, text: text))
+        sessionId: id, turn: TurnRef(id: turn, request: request), kind: kind, text: text,
+        prompt: kind == .typed && prompt ? true : nil))
   }
 
   /// The conversations as saved, which a restarted app reads.
@@ -3456,6 +3457,17 @@ struct BridgeTests {
     try await sync(a, turn: "turn-2", kind: .answer, "A peer session wrote; noted.")
     #expect(await voice.opens.isEmpty)
     #expect(await !audio.calls.contains("chime"))
+  }
+
+  /// An answer given at the keyboard to Claude's question is no prompt: the answer to a turn that
+  /// holds only that, such as another session's message, stays context.
+  @Test func anAnswerToATurnWithOnlyAKeyboardAnswerStaysContext() async throws {
+    try await join(a, "Alpha")
+    await bridge.perform(.start)
+    try await sync(a, turn: "turn-2", kind: .start)
+    try await sync(a, turn: "turn-2", prompt: false, "You answered at the keyboard: Yes")
+    try await sync(a, turn: "turn-2", kind: .answer, "The night work is lined up.")
+    #expect(await voice.opens.isEmpty)
   }
 
   /// Another session's answer to a typed turn stays context: it neither opens the line nor chimes.
