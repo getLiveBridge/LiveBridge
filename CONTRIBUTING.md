@@ -3,8 +3,9 @@
 Thanks for helping. Issues and pull requests are welcome; for anything larger than a fix, open
 an issue first so we can agree on the shape. The issue forms ask for what a report needs (your
 macOS, LiveBridge commit, Claude Code and codex versions, and what the band or menu showed), and
-the pull request template asks what changed, why, how you tested it, and whether
-`scripts/check.sh` passed. Report a vulnerability privately, as [SECURITY.md](SECURITY.md)
+the pull request template asks what changed, why, how you tested it, whether
+`scripts/check.sh` passed, and which parts a tool generated
+([AI-assisted contributions](#ai-assisted-contributions)). Report a vulnerability privately, as [SECURITY.md](SECURITY.md)
 says, not in an issue. Everyone taking part follows the [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## Layout
@@ -16,7 +17,7 @@ says, not in an issue. Everyone taking part follows the [Code of Conduct](CODE_O
 | `wire/fixtures/` | One JSON file per message between the mod and the app: the shared oracle both sides test against. |
 | `wire/summary-budget.json` | The time the mod allows a summary, which both sides test their constant against, and the time it allows Settings' model check, which the app's wait must outlast. |
 | `scripts/` | `check.sh` (every check CI runs but the floor run), `check-mod.sh` (the mod's engine-facing half), `check-floor.sh` (that half on the lowest Claude Code the README promises), `build-app.sh` (build, install, uninstall, package), `smoke.sh` (end to end). |
-| `docs/` | [Architecture](docs/architecture/overview.md) and [ADRs](docs/adr/); the rest is the stayfixed scaffold (below). |
+| `docs/` | The user guide the README links to ([guide.md](docs/guide.md), [privacy.md](docs/privacy.md), [known-limitations.md](docs/known-limitations.md)) and the translations of all four (`i18n/`); [architecture](docs/architecture/overview.md) and [ADRs](docs/adr/); the rest is the stayfixed scaffold (below). |
 
 ## Where to start
 
@@ -250,6 +251,14 @@ one before, and ignore a line's first row, where concealment is only start-up.
 - Commits follow [Conventional Commits](https://www.conventionalcommits.org/) (`feat`, `fix`,
   `docs`, `test`, `build`, `chore`, …), one logical change each.
 - Write for a reader who has not seen the code: short sentences, the reason before the detail.
+
+## AI-assisted contributions
+
+You may use coding assistants. In the pull request, say which parts a tool generated, and
+confirm that you ran `scripts/check.sh`, read every changed line and can explain each of them.
+Pull requests whose authors cannot answer a reviewer's question about their own code are closed.
+Issues and comments must be written or checked by their author: do not paste model output you
+have not reviewed.
 
 ## stayfixed
 

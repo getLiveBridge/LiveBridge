@@ -402,7 +402,7 @@ sequenceDiagram
 ### Silent hang-up
 
 The realtime session is billed while open, so silence closes it. How long each quiet lasts is the
-owner's: `CallMachine.Timeouts`, from Settings ([README](../../README.md#settings) has the
+owner's: `CallMachine.Timeouts`, from Settings ([the guide](../guide.md#settings) has the
 defaults), read before each event. A timeout of 0 cancels the armed timer and arms none, except a
 first-word wait of 0, which waits the silence. A change in Settings arms a timer turned on at once
 when the line is quiet and none counts (`timeoutsChanged`); one already counting is not moved. Voice detection keeps running
@@ -539,7 +539,7 @@ sequenceDiagram
 ### Approval notice
 
 This notice is not sent where Claude Code's built-in guard loads and the mod is not the
-organization's own ([known limitations](../../README.md#known-limitations), [ADR 0001](../adr/0001-platform-findings.md)).
+organization's own ([known limitations](../known-limitations.md), [ADR 0001](../adr/0001-platform-findings.md)).
 
 The bridge never answers a permission prompt. When a main-loop turn hits one, the voice is given
 that Claude is waiting and what Claude wrote before it, such as "I'm going to delete build/ and

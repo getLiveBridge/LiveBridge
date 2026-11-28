@@ -4,6 +4,14 @@ All notable changes to this project are listed here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow
 [Semantic Versioning](https://semver.org/).
 
+## [0.6.6]
+
+### Fixed
+
+- Settings opens in front of other apps' windows. When macOS did not bring LiveBridge to the
+  front, the Settings window opened beneath the app you were in, so choosing Settings seemed
+  to do nothing.
+
 ## [0.6.5]
 
 ### Fixed
@@ -318,7 +326,7 @@ conversations and paused marks; the in-app update never goes back.
 
 - The conversation kept for each session holds its last 64 lines instead of 24.
 - **Load context automatically when a line opens** is gone from Settings. A line now loads a summary
-  by itself when the voice lacks part of the session ([when](README.md#the-band-and-the-menu)). An
+  by itself when the voice lacks part of the session ([when](docs/guide.md#the-band-and-the-menu)). An
   owner who had turned it off gets **Pause
   sync while the call is stopped** turned on at the update, so summaries stay by hand; turns typed
   while the call is on now sync all the same.
@@ -445,7 +453,7 @@ conversations and paused marks; the in-app update never goes back.
   GitHub CLI: it verifies the image's attestation, pinned to the release workflow, the tag and
   GitHub-hosted runners, checks the app inside, waits for Claude to finish a voice request,
   updates the mod, swaps the app in one step and reopens it. The README's
-  [Updating](README.md#updating) says what to expect.
+  [Updating](docs/guide.md#updating) says what to expect.
 - The menu's Conversation submenu shows each request the voice hands to Claude as a **Task**
   line, between what you said and the voice's reply.
 

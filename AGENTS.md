@@ -16,8 +16,10 @@ the status section at most 50 lines); detail lives in the documents it links to.
 - `wire/fixtures/`: one JSON example of every message between the mod and the app.
 - `scripts/`: `check.sh`, `check-mod.sh`, `check-floor.sh`, `smoke.sh`, `build-app.sh`,
   `notarize.sh`.
-- `docs/`: the [architecture](docs/architecture/overview.md), [ADRs](docs/adr/), the README's
-  translations (`i18n/`), and the stayfixed scaffold ([CONTRIBUTING.md](CONTRIBUTING.md#stayfixed) says what each file is for).
+- `docs/`: the user guide the README summarises (`guide.md`, `privacy.md`,
+  `known-limitations.md`), the [architecture](docs/architecture/overview.md), [ADRs](docs/adr/),
+  the translations of the README, the guide, privacy and known limitations (`i18n/`), and the
+  stayfixed scaffold ([CONTRIBUTING.md](CONTRIBUTING.md#stayfixed) says what each file is for).
 
 ## Build and test
 
@@ -46,10 +48,12 @@ the status section at most 50 lines); detail lives in the documents it links to.
 - One fact, one home ([documentation policy](docs/architecture/documentation.md)): link to it
   instead of copying it, and fix the docs in the same change as the code.
 - Conventional Commits, one logical change each.
+- A pull request an agent helped write follows
+  [AI-assisted contributions](CONTRIBUTING.md#ai-assisted-contributions).
 
 ## Current status
 
-- 0.6.5 is the latest release. Its open items are the README's
+- 0.6.6 is the latest release. Its open items are the README's
   [known limitations](README.md#known-limitations).
 <!-- stayfixed:harness:begin -->
 ## stayfixed
